@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -22,30 +23,14 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class HomeFragment : Fragment() {
-    var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     var quotes: MutableList<Quote> = mutableListOf<Quote>()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val layoutManager = LinearLayoutManager(activity)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        layoutManager.orientation = RecyclerView.VERTICAL
 
         var adapter : QuotesAdapter? = null
 
-        db
-            .collection("quotes")
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    Log.d("success", "${document.id} => ${document.data}")
-                    quotes.add(Quote(document.get("quote").toString(), document.get("source").toString()))
-                }
-                recyclerView.layoutManager = layoutManager
-                adapter = QuotesAdapter(activity, quotes)
-                recyclerView.adapter = adapter
-            }
-            .addOnFailureListener { exception ->
-                Log.w("failure", "Error getting documents: ", exception)
-            }
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
