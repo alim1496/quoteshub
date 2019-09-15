@@ -1,4 +1,4 @@
-package com.example.quoteshub
+package com.example.quoteshub.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.quoteshub.R
+import com.example.quoteshub.models.Quote
 
 class QuotesAdapter(val context: FragmentActivity?, val quotes:List<Quote>) : RecyclerView.Adapter<QuotesAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -27,7 +29,7 @@ class QuotesAdapter(val context: FragmentActivity?, val quotes:List<Quote>) : Re
             val quoteText = itemView.findViewById<RecyclerView>(R.id.quote_text) as TextView
             val quoteSrc = itemView.findViewById<RecyclerView>(R.id.quote_src) as TextView
             quoteText.text = quote?.title
-            quoteSrc.text = quote?.source
+            quoteSrc.text = quote?.source?.name
         }
     }
 }
