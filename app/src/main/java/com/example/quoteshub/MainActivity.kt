@@ -5,9 +5,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.quoteshub.fragments.AuthorsFragment
 import com.example.quoteshub.fragments.CategoriesFragment
 import com.example.quoteshub.fragments.HomeFragment
-import com.example.quoteshub.fragments.NotificationsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
-                replaceFragment(NotificationsFragment())
+                replaceFragment(AuthorsFragment())
                 return@OnNavigationItemSelectedListener true
             }
         }

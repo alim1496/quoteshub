@@ -8,15 +8,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.quoteshub.AutoFitGLM
 import com.example.quoteshub.R
+import com.example.quoteshub.activities.SingleAuthor
 import com.example.quoteshub.activities.SingleCategory
+import com.example.quoteshub.adapters.AuthorsAdapter
 import com.example.quoteshub.adapters.CategoriesAdapter
+import com.example.quoteshub.models.Author
+import com.example.quoteshub.models.AuthorModel
 import com.example.quoteshub.models.Category
 import com.example.quoteshub.models.CategoryModel
 import com.example.quoteshub.services.DestinationServices
 import com.example.quoteshub.services.ServiceBuilder
+import kotlinx.android.synthetic.main.fragment_authors.*
 import kotlinx.android.synthetic.main.fragment_categories.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,42 +38,42 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class CategoriesFragment : Fragment() {
-    var adapter : CategoriesAdapter ? = null
+class AuthorsFragment : Fragment() {
+    var adapter: AuthorsAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val layoutManager = AutoFitGLM(activity, 500)
+        val layoutManager = AutoFitGLM(activity, 300)
         loadData(layoutManager)
-        return inflater.inflate(R.layout.fragment_categories, container, false)
+        return inflater.inflate(R.layout.fragment_authors, container, false)
     }
 
     private fun loadData(layoutManager: GridLayoutManager) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<CategoryModel> = destinationServices.getCategories()
-        requestCall.enqueue(object: Callback<CategoryModel> {
+        val requestCall : Call<AuthorModel> = destinationServices.getAuthors()
+        requestCall.enqueue(object: Callback<AuthorModel> {
 
-            override fun onResponse(call: Call<CategoryModel>, response: Response<CategoryModel>) {
+            override fun onResponse(call: Call<AuthorModel>, response: Response<AuthorModel>) {
                 if (response.isSuccessful) {
-                    val categoryList : CategoryModel = response.body()!!
-                    cat_recyclerview.layoutManager = layoutManager
-                    adapter = CategoriesAdapter(activity, categoryList.results) { item : Category, position: Int ->
-                        val intent = Intent(context, SingleCategory::class.java)
-                        intent.putExtra("catID", item.id)
+                    val authors : AuthorModel = response.body()!!
+                    author_recyclerview.layoutManager = layoutManager
+                    adapter = activity?.let { AuthorsAdapter(it, authors.results) { author: Author, position: Int ->
+                        val intent = Intent(context, SingleAuthor::class.java)
+                        intent.putExtra("authorID", author.id)
+                        intent.putExtra("authorQuotes", author.quotes)
                         startActivity(intent)
-                    }
-                    cat_recyclerview.adapter = adapter
+                    } }
+                    author_recyclerview.adapter = adapter
                 }
             }
 
-            override fun onFailure(call: Call<CategoryModel>, t: Throwable) {
-                Log.e("alim", "oh ho")
+            override fun onFailure(call: Call<AuthorModel>, t: Throwable) {
+                Log.e("alim", "${t}")
             }
         })
     }
-
 
 }

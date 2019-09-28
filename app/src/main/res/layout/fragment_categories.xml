@@ -9,6 +9,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/cat_recyclerview"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
     />
 
 </LinearLayout>
