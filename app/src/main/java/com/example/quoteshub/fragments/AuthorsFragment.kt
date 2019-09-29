@@ -64,6 +64,7 @@ class AuthorsFragment : Fragment() {
                         val intent = Intent(context, SingleAuthor::class.java)
                         intent.putExtra("authorID", author.id)
                         intent.putExtra("authorQuotes", author.quotes)
+                        intent.putExtra("authorname", author.name)
                         startActivity(intent)
                     } }
                     author_recyclerview.adapter = adapter

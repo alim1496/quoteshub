@@ -2,6 +2,7 @@ package com.example.quoteshub.activities
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,12 +22,28 @@ class SingleCategory : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_home)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = RecyclerView.VERTICAL
+
         val id: Int? = intent.extras?.getInt("catID")
+        val name: String? = intent.extras?.getString("catName")
+        setTitle(name)
+
         if (id != null) {
             loadData(layoutManager, id)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun loadData(layoutManager: LinearLayoutManager, id: Int) {

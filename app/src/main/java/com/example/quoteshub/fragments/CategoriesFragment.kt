@@ -57,6 +57,7 @@ class CategoriesFragment : Fragment() {
                     adapter = CategoriesAdapter(activity, categoryList.results) { item : Category, position: Int ->
                         val intent = Intent(context, SingleCategory::class.java)
                         intent.putExtra("catID", item.id)
+                        intent.putExtra("catName", item.name)
                         startActivity(intent)
                     }
                     cat_recyclerview.adapter = adapter
