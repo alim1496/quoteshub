@@ -8,7 +8,7 @@ import retrofit2.http.Path
 interface DestinationServices {
 
     @GET("quotes/v1/quotes/feed/")
-    fun getFeed(): Call<Response>
+    fun getFeed(): Call<FeedModel>
 
     @GET("quotes/v1/categories/team/")
     fun getCategories(): Call<CategoryModel>
