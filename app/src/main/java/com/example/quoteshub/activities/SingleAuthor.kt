@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,13 +20,18 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.single_author.*
 import retrofit2.Call
 import retrofit2.Callback
+import android.widget.LinearLayout
+import android.view.animation.Animation
+import android.service.autofill.Transformation
+import android.view.View
+
 
 class SingleAuthor : AppCompatActivity() {
     var adapter: AuthorQuotesAdapter?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.single_author)
+        setContentView(com.example.quoteshub.R.layout.single_author)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val id = intent.extras?.getInt("authorID")
