@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quoteshub.R
 import com.example.quoteshub.models.Quote
 
-class AuthorQuotesAdapter(val context: Context, val quotes: List<Quote>) : RecyclerView.Adapter<AuthorQuotesAdapter.MyViewHolder>() {
+
+
+class AuthorQuotesAdapter(val context: Context, var quotes: List<Quote>) : RecyclerView.Adapter<AuthorQuotesAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -25,6 +27,11 @@ class AuthorQuotesAdapter(val context: Context, val quotes: List<Quote>) : Recyc
     override fun onBindViewHolder(holder: AuthorQuotesAdapter.MyViewHolder, position: Int) {
         val quote = quotes[position]
         return holder.setData(quote)
+    }
+
+    fun addItems(newQuotes: List<Quote>) {
+        quotes += newQuotes
+        notifyDataSetChanged()
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

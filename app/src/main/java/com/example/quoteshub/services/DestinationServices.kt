@@ -4,6 +4,7 @@ import com.example.quoteshub.models.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface DestinationServices {
 
@@ -20,6 +21,9 @@ interface DestinationServices {
     fun getAuthors(): Call<AuthorModel>
 
     @GET("quotes/v1/sources/{id}/details/")
-    fun getAuthorDetails(@Path("id") id: Int): Call<AuthorDetails>
+    fun getAuthorDetails(
+        @Path("id") id: Int,
+        @Query("page") page: Int
+    ): Call<AuthorDetails>
 
 }

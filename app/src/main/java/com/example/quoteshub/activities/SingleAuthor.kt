@@ -1,37 +1,33 @@
 package com.example.quoteshub.activities
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quoteshub.R
 import com.example.quoteshub.adapters.AuthorQuotesAdapter
-import com.example.quoteshub.adapters.CategoryQuotesAdapter
 import com.example.quoteshub.models.AuthorDetails
-import com.example.quoteshub.models.Response
 import com.example.quoteshub.services.DestinationServices
 import com.example.quoteshub.services.ServiceBuilder
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.single_author.*
 import retrofit2.Call
 import retrofit2.Callback
-import android.widget.LinearLayout
-import android.view.animation.Animation
-import android.service.autofill.Transformation
-import android.view.View
+import java.text.FieldPosition
 
 
 class SingleAuthor : AppCompatActivity() {
     var adapter: AuthorQuotesAdapter?= null
+    var loading: Boolean = true
+    var visibleItemCount: Int = 0
+    var totalItemCount: Int = 0
+    var pastVisiblesItems: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.example.quoteshub.R.layout.single_author)
+        setSupportActionBar(collapseToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val id = intent.extras?.getInt("authorID")
@@ -40,12 +36,33 @@ class SingleAuthor : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = RecyclerView.VERTICAL
+        auth_quotes_recycle.layoutManager = layoutManager
 
-        setTitle(name)
+        title = name
         quotes_title.text = "Quotes By ${name}"
 
+        auth_quotes_recycle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = layoutManager.getChildCount()
+                    totalItemCount = layoutManager.getItemCount()
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
+
+                    if (loading) {
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            val page: Int = (totalItemCount/10) + 1
+                            loading = false
+                            if (id != null) {
+                                loadMore(id, page, totalItemCount)
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
         if (id != null && count != null) {
-            loadData(id, count, layoutManager)
+            loadData(id, count, 1)
         }
     }
 
@@ -59,9 +76,28 @@ class SingleAuthor : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadData(id: Int, count: Int, layoutManager: LinearLayoutManager) {
+    private fun loadMore(id: Int, page: Int, position: Int) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<AuthorDetails> = destinationServices.getAuthorDetails(id)
+        val requestCall : Call<AuthorDetails> = destinationServices.getAuthorDetails(id, page)
+        requestCall.enqueue(object: Callback<AuthorDetails> {
+            override fun onResponse(call: Call<AuthorDetails>, response: retrofit2.Response<AuthorDetails>) {
+
+                if (response.isSuccessful) {
+                    val authorDetails : AuthorDetails = response.body()!!
+                    val authorQuotes = authorDetails.quotes
+                    adapter?.addItems(authorQuotes.results)
+                }
+            }
+
+            override fun onFailure(call: Call<AuthorDetails>, t: Throwable) {
+                Log.e("alim", "oh ho")
+            }
+        })
+    }
+
+    private fun loadData(id: Int, count: Int, page: Int) {
+        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
+        val requestCall : Call<AuthorDetails> = destinationServices.getAuthorDetails(id, page)
 
         requestCall.enqueue(object: Callback<AuthorDetails> {
             override fun onResponse(call: Call<AuthorDetails>, response: retrofit2.Response<AuthorDetails>) {
@@ -73,7 +109,6 @@ class SingleAuthor : AppCompatActivity() {
                     author_desc.text = authorDetails.source.shortDesc
 
                     val authorQuotes = authorDetails.quotes
-                    auth_quotes_recycle.layoutManager = layoutManager
                     adapter = AuthorQuotesAdapter(applicationContext, authorQuotes.results)
                     auth_quotes_recycle.adapter = adapter
                 }

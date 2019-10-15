@@ -1,102 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_margin="20dp"
-            android:orientation="horizontal"
-    >
-
-        <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/single_author_img"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-        />
-        <LinearLayout
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:gravity="center"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/quotes_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-            />
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:gravity="center"
-                    android:text="Quotes"
-                    android:textSize="16sp"
-            />
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:gravity="center"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/followers_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-            />
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:gravity="center"
-                    android:text="Followers"
-                    android:textSize="16dp"
-            />
-        </LinearLayout>
-    </LinearLayout>
-
-
-            <LinearLayout
-                    android:id="@+id/auth_desc_holder"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp">
-
-                <TextView
-                        android:id="@+id/author_desc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                />
-            </LinearLayout>
-
-    <TextView
-            android:id="@+id/quotes_title"
+        android:layout_height="match_parent">
+    <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="20dp"
-            android:textStyle="bold"
-    />
+            android:fitsSystemWindows="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app:titleEnabled="false"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/auth_quotes_recycle"
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="?attr/actionBarSize"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                    app:layout_collapseMode="parallax"
+                    android:orientation="vertical">
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_margin="20dp"
+                        android:orientation="horizontal"
+                >
+                    <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/single_author_img"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                    />
+                    <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                        <TextView
+                                android:id="@+id/quotes_count"
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textSize="16dp"
+                                android:textStyle="bold"
+                        />
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:gravity="center"
+                                android:text="Quotes"
+                                android:textSize="16sp"
+                        />
+                    </LinearLayout>
+                    <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                        <TextView
+                                android:id="@+id/followers_count"
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                        />
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:gravity="center"
+                                android:text="Followers"
+                                android:textSize="16sp"
+                        />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                        android:id="@+id/auth_desc_holder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp">
+
+                    <TextView
+                            android:id="@+id/author_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                    />
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/collapseToolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    android:background="#87F345"
+                    android:elevation="10dp"
+            />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-    />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp">
 
-</LinearLayout>
+        <TextView
+                android:id="@+id/quotes_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:paddingBottom="20dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+        />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/auth_quotes_recycle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+        />
+    </RelativeLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
