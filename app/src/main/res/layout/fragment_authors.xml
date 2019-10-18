@@ -5,12 +5,21 @@
              android:layout_height="match_parent"
              tools:context=".fragments.AuthorsFragment">
 
+    <ProgressBar
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:id="@+id/authors_screen_loader"
+            android:indeterminateDrawable="@drawable/custom_progress_bar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/author_recyclerview"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:visibility="invisible"
     />
 
 </FrameLayout>

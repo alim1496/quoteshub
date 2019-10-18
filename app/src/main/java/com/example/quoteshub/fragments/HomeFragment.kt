@@ -2,6 +2,7 @@ package com.example.quoteshub.fragments
 
 
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,13 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
 import com.example.quoteshub.adapters.QuotesAdapter
 import com.example.quoteshub.R
 import com.example.quoteshub.activities.SingleAuthor
-import com.example.quoteshub.adapters.AuthorsAdapter
 import com.example.quoteshub.adapters.HomeAuthorsAdapter
 import com.example.quoteshub.models.Author
 import com.example.quoteshub.models.FeedModel
@@ -43,8 +41,8 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        val featuredManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        val featuredManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         val authorsManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
         loadFeed(layoutManager, featuredManager, authorsManager)
@@ -59,19 +57,20 @@ class HomeFragment : Fragment() {
             override fun onResponse(call: Call<FeedModel>, response: Response<FeedModel>) {
 
                 if (response.isSuccessful) {
+                    home_screen_loader.visibility = View.GONE
+                    home_screen_container.visibility = View.VISIBLE
+
                     val feedResponse: FeedModel = response.body()!!
 
                     val recentQuotes = feedResponse.RecentQuotes
                     recent_quotes_title.text = recentQuotes.title
                     recyclerView.layoutManager = layoutManager
-                    LinearSnapHelper().attachToRecyclerView(recyclerView)
                     adapter = QuotesAdapter(activity, recentQuotes.data)
                     recyclerView.adapter = adapter
 
                     val featuredQuotes = feedResponse.FeaturedQuotes
                     featured_quotes_title.text = featuredQuotes.title
                     featured_recyclerView.layoutManager = featuredManager
-                    LinearSnapHelper().attachToRecyclerView(featured_recyclerView)
                     adapter = QuotesAdapter(activity, featuredQuotes.data)
                     featured_recyclerView.adapter = adapter
 

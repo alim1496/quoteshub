@@ -58,6 +58,8 @@ class AuthorsFragment : Fragment() {
 
             override fun onResponse(call: Call<AuthorModel>, response: Response<AuthorModel>) {
                 if (response.isSuccessful) {
+                    authors_screen_loader.visibility = View.GONE
+                    author_recyclerview.visibility = View.VISIBLE
                     val authors : AuthorModel = response.body()!!
                     author_recyclerview.layoutManager = layoutManager
                     adapter = activity?.let { AuthorsAdapter(it, authors.results) { author: Author, position: Int ->

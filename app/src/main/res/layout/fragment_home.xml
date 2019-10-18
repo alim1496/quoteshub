@@ -1,104 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".fragments.HomeFragment"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
 >
+    <ProgressBar
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:id="@+id/home_screen_loader"
+            android:indeterminateDrawable="@drawable/custom_progress_bar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"/>
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  >
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ECE8E8"
+            android:visibility="invisible"
+            android:id="@+id/home_screen_container"
+    >
 
-
-        <TextView
-                android:id="@+id/recent_quotes_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="24sp"
-                android:textStyle="bold"
-        />
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-        />
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+        >
 
 
-        <TextView
-                android:id="@+id/featured_quotes_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="24sp"
-                android:textStyle="bold"
-        />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/featured_recyclerView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-        />
-
-
-        <TextView
-                android:id="@+id/featured_authors_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="24sp"
-                android:textStyle="bold"
-        />
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/authors_recyclerview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:orientation="horizontal"
-        />
-
-        <TextView
-                android:id="@+id/quote_day_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="24sp"
-                android:textStyle="bold"
-        />
-
-        <LinearLayout
-                android:layout_marginStart="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/day_quote_title"
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-            />
-            <TextView
-                    android:id="@+id/day_quote_src"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:paddingBottom="10dp"
+                    android:background="#ffffff"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/recent_quotes_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="20sp"
+                />
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="vertical"
+                />
+            </LinearLayout>
+
+
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-            />
+                    android:layout_marginBottom="2dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:background="#ffffff"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/featured_quotes_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="20sp"
+                />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/featured_recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="vertical"
+                />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="#ffffff"
+                    android:orientation="vertical">
+
+
+                <TextView
+                        android:id="@+id/featured_authors_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="20sp"
+                />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/authors_recyclerview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:orientation="horizontal"
+                />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="#ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/quote_day_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"
+                />
+
+                <LinearLayout
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/day_quote_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:fontFamily="sans-serif"
+                    />
+                    <TextView
+                            android:id="@+id/day_quote_src"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-light"
+                    />
+                </LinearLayout>
+
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>

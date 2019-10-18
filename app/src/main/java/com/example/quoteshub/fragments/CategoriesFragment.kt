@@ -52,6 +52,8 @@ class CategoriesFragment : Fragment() {
 
             override fun onResponse(call: Call<CategoryModel>, response: Response<CategoryModel>) {
                 if (response.isSuccessful) {
+                    categories_screen_loader.visibility = View.GONE
+                    cat_recyclerview.visibility = View.VISIBLE
                     val categoryList : CategoryModel = response.body()!!
                     cat_recyclerview.layoutManager = layoutManager
                     adapter = CategoriesAdapter(activity, categoryList.results) { item : Category, position: Int ->
