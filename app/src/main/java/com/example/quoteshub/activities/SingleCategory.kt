@@ -3,6 +3,7 @@ package com.example.quoteshub.activities
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +14,7 @@ import com.example.quoteshub.models.Response
 import com.example.quoteshub.services.DestinationServices
 import com.example.quoteshub.services.ServiceBuilder
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.single_category.*
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -21,7 +23,8 @@ class SingleCategory : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_home)
+        setContentView(R.layout.single_category)
+        setSupportActionBar(cat_tool_bar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val layoutManager = LinearLayoutManager(this)
@@ -54,10 +57,12 @@ class SingleCategory : AppCompatActivity() {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
 
                 if (response.isSuccessful) {
+                    single_category_loader.visibility = View.GONE
+                    single_cat_recycler.visibility = View.VISIBLE
                     val quoteList : Response = response.body()!!
-                    recyclerView.layoutManager = layoutManager
+                    single_cat_recycler.layoutManager = layoutManager
                     adapter = CategoryQuotesAdapter(applicationContext, quoteList.results)
-                    recyclerView.adapter = adapter
+                    single_cat_recycler.adapter = adapter
                 }
             }
 
