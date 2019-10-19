@@ -15,7 +15,10 @@ interface DestinationServices {
     fun getCategories(): Call<CategoryModel>
 
     @GET("quotes/v1/categories/{id}/quotes/")
-    fun getCategoryQuotes(@Path("id") id : Int): Call<Response>
+    fun getCategoryQuotes(
+        @Path("id") id : Int,
+        @Query("page") page: Int
+    ): Call<Response>
 
     @GET("quotes/v1/sources/team/")
     fun getAuthors(): Call<AuthorModel>

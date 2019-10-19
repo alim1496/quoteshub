@@ -20,6 +20,10 @@ import retrofit2.Callback
 
 class SingleCategory : AppCompatActivity() {
     var adapter: CategoryQuotesAdapter? = null
+    var loading: Boolean = true
+    var visibleItemCount: Int = 0
+    var totalItemCount: Int = 0
+    var pastVisiblesItems: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +36,29 @@ class SingleCategory : AppCompatActivity() {
 
         val id: Int? = intent.extras?.getInt("catID")
         val name: String? = intent.extras?.getString("catName")
-        setTitle(name)
+        title = name
 
+        single_cat_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = layoutManager.childCount
+                    totalItemCount = layoutManager.itemCount
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
+
+                    if (loading) {
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            val page: Int = (totalItemCount/10) + 1
+                            loading = false
+                            if (id != null) {
+                                loadMore(id, page, totalItemCount)
+                            }
+                        }
+                    }
+                }
+            }
+        })
         if (id != null) {
-            loadData(layoutManager, id)
+            loadData(layoutManager, id, 1)
         }
     }
 
@@ -49,9 +72,27 @@ class SingleCategory : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadData(layoutManager: LinearLayoutManager, id: Int) {
+    private fun loadMore(id: Int, page: Int, position: Int) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<Response> = destinationServices.getCategoryQuotes(id)
+        val requestCall : Call<Response> = destinationServices.getCategoryQuotes(id, page)
+        requestCall.enqueue(object: Callback<Response> {
+            override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
+
+                if (response.isSuccessful) {
+                    val quoteList : Response = response.body()!!
+                    adapter?.addItems(quoteList.results)
+                }
+            }
+
+            override fun onFailure(call: Call<Response>, t: Throwable) {
+                Log.e("alim", "oh ho")
+            }
+        })
+    }
+
+    private fun loadData(layoutManager: LinearLayoutManager, id: Int, page: Int) {
+        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
+        val requestCall : Call<Response> = destinationServices.getCategoryQuotes(id, page)
         requestCall.enqueue(object: Callback<Response> {
 
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {

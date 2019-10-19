@@ -15,10 +15,14 @@ import com.example.quoteshub.adapters.QuotesAdapter
 import com.example.quoteshub.R
 import com.example.quoteshub.activities.SingleAuthor
 import com.example.quoteshub.adapters.HomeAuthorsAdapter
+import com.example.quoteshub.adapters.TagsAdapter
 import com.example.quoteshub.models.Author
 import com.example.quoteshub.models.FeedModel
 import com.example.quoteshub.services.DestinationServices
 import com.example.quoteshub.services.ServiceBuilder
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,18 +42,23 @@ private const val ARG_PARAM2 = "param2"
 class HomeFragment : Fragment() {
     var adapter : QuotesAdapter? = null
     var adapter2 : HomeAuthorsAdapter? = null
+    var adapter3 : TagsAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         val featuredManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         val authorsManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val tagsManager = FlexboxLayoutManager(activity)
+        tagsManager.flexDirection = FlexDirection.ROW
+        tagsManager.justifyContent = JustifyContent.FLEX_START
 
-        loadFeed(layoutManager, featuredManager, authorsManager)
+        loadFeed(layoutManager, featuredManager, authorsManager, tagsManager)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    private fun loadFeed(layoutManager : LinearLayoutManager, featuredManager: LinearLayoutManager, authorsManager: LinearLayoutManager) {
+    private fun loadFeed(layoutManager : LinearLayoutManager, featuredManager: LinearLayoutManager,
+                         authorsManager: LinearLayoutManager, tagsManager: FlexboxLayoutManager) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<FeedModel> = destinationServices.getFeed()
         requestCall.enqueue(object: Callback<FeedModel> {
@@ -89,6 +98,9 @@ class HomeFragment : Fragment() {
                     quote_day_title.text = quoteDay.title
                     day_quote_title.text = quoteDay.data.title
                     day_quote_src.text = quoteDay.data.source.name
+                    day_tag_recycler.layoutManager = tagsManager
+                    adapter3 = TagsAdapter(activity, quoteDay.data.tags)
+                    day_tag_recycler.adapter = adapter3
                 }
             }
 
