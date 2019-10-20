@@ -87,10 +87,12 @@
                         android:id="@+id/auth_desc_holder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp">
+                        android:padding="20dp">
 
                     <TextView
                             android:id="@+id/author_desc"
+                            android:fontFamily="sans-serif"
+                            android:textSize="14sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                     />
@@ -110,29 +112,29 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <LinearLayout
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:background="#ECE8E8"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp">
+            android:layout_height="wrap_content">
 
         <TextView
                 android:id="@+id/quotes_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:paddingBottom="20dp"
+                android:padding="10dp"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:background="@drawable/toolbar_dropshadow"
         />
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/auth_quotes_recycle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
         />
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
