@@ -24,6 +24,7 @@ class SingleCategory : AppCompatActivity() {
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
     var pastVisiblesItems: Int = 0
+    var pageRequested: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +48,11 @@ class SingleCategory : AppCompatActivity() {
 
                     if (loading) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            val page: Int = (totalItemCount/10) + 1
+                            // val page: Int = (totalItemCount/10) + 1
+                            pageRequested += 1
                             loading = false
                             if (id != null) {
-                                loadMore(id, page, totalItemCount)
+                                loadMore(id, pageRequested)
                             }
                         }
                     }
@@ -72,7 +74,7 @@ class SingleCategory : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadMore(id: Int, page: Int, position: Int) {
+    private fun loadMore(id: Int, page: Int) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<Response> = destinationServices.getCategoryQuotes(id, page)
         requestCall.enqueue(object: Callback<Response> {

@@ -23,6 +23,7 @@ class SingleAuthor : AppCompatActivity() {
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
     var pastVisiblesItems: Int = 0
+    var pageRequested: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,16 +45,16 @@ class SingleAuthor : AppCompatActivity() {
         auth_quotes_recycle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
-                    visibleItemCount = layoutManager.getChildCount()
-                    totalItemCount = layoutManager.getItemCount()
+                    visibleItemCount = layoutManager.childCount
+                    totalItemCount = layoutManager.itemCount
                     pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
-
                     if (loading) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            val page: Int = (totalItemCount/10) + 1
+                            // val page: Int = (totalItemCount/10) + 1
+                            pageRequested += 1
                             loading = false
                             if (id != null) {
-                                loadMore(id, page, totalItemCount)
+                                loadMore(id, pageRequested)
                             }
                         }
                     }
@@ -76,7 +77,7 @@ class SingleAuthor : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadMore(id: Int, page: Int, position: Int) {
+    private fun loadMore(id: Int, page: Int) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<AuthorDetails> = destinationServices.getAuthorDetails(id, page)
         requestCall.enqueue(object: Callback<AuthorDetails> {

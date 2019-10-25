@@ -23,6 +23,7 @@ import com.example.quoteshub.services.ServiceBuilder
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -105,7 +106,13 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<FeedModel>, t: Throwable) {
-                Log.e("alim", "oh ho")
+                home_screen_loader.visibility = View.GONE
+                net_err_holder.visibility = View.VISIBLE
+                try_again_btn.setOnClickListener(View.OnClickListener {
+                    home_screen_loader.visibility = View.VISIBLE
+                    net_err_holder.visibility = View.GONE
+                    loadFeed(layoutManager, featuredManager, authorsManager, tagsManager)
+                })
             }
         })
     }

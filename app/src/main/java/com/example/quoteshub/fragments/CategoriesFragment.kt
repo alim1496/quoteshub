@@ -17,6 +17,7 @@ import com.example.quoteshub.models.Category
 import com.example.quoteshub.models.CategoryModel
 import com.example.quoteshub.services.DestinationServices
 import com.example.quoteshub.services.ServiceBuilder
+import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_categories.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,7 +68,13 @@ class CategoriesFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<CategoryModel>, t: Throwable) {
-                Log.e("alim", "oh ho")
+                categories_screen_loader.visibility = View.GONE
+                cat_net_err.visibility = View.VISIBLE
+                try_again_btn.setOnClickListener(View.OnClickListener {
+                    categories_screen_loader.visibility = View.VISIBLE
+                    cat_net_err.visibility = View.GONE
+                    loadData(layoutManager)
+                })
             }
         })
     }

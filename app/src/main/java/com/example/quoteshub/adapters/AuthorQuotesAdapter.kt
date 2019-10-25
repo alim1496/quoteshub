@@ -8,10 +8,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quoteshub.R
 import com.example.quoteshub.models.Quote
-
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
+import kotlinx.android.synthetic.main.author_quote_item.view.*
 
 
 class AuthorQuotesAdapter(val context: Context, var quotes: List<Quote>) : RecyclerView.Adapter<AuthorQuotesAdapter.MyViewHolder>() {
+    private val viewPool = RecyclerView.RecycledViewPool()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -26,7 +31,17 @@ class AuthorQuotesAdapter(val context: Context, var quotes: List<Quote>) : Recyc
 
     override fun onBindViewHolder(holder: AuthorQuotesAdapter.MyViewHolder, position: Int) {
         val quote = quotes[position]
-        return holder.setData(quote)
+        holder.setData(quote)
+
+        val tagsManager = FlexboxLayoutManager(context)
+        tagsManager.flexDirection = FlexDirection.ROW
+        tagsManager.justifyContent = JustifyContent.FLEX_START
+
+        holder.itemView.author_quote_tags.apply {
+            layoutManager = tagsManager
+            adapter = TagsAdapterMain(context, quote.tags)
+            setRecycledViewPool(viewPool)
+        }
     }
 
     fun addItems(newQuotes: List<Quote>) {

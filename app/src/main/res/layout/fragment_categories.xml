@@ -22,4 +22,7 @@
             android:visibility="invisible"
     />
 
+    <include
+            layout="@layout/common_error_container"
+            android:id="@+id/cat_net_err"/>
 </FrameLayout>
