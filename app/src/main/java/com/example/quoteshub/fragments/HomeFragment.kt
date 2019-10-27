@@ -1,6 +1,9 @@
 package com.example.quoteshub.fragments
 
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.opengl.Visibility
 import android.os.Bundle
@@ -9,6 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quoteshub.adapters.QuotesAdapter
@@ -23,6 +27,8 @@ import com.example.quoteshub.services.ServiceBuilder
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import kotlinx.android.synthetic.main.action_buttons_bar.*
+import kotlinx.android.synthetic.main.action_buttons_bar.view.*
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
@@ -102,6 +108,20 @@ class HomeFragment : Fragment() {
                     day_tag_recycler.layoutManager = tagsManager
                     adapter3 = TagsAdapter(activity, quoteDay.data.tags)
                     day_tag_recycler.adapter = adapter3
+                    action_copy.setOnClickListener(View.OnClickListener {
+                        val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?;
+                        val clip = ClipData.newPlainText("label", quoteDay.data.title)
+                        clipboard!!.setPrimaryClip(clip)
+                        Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show()
+                    })
+                    action_share.setOnClickListener(View.OnClickListener {
+                        val intent = Intent()
+                        intent.action = Intent.ACTION_SEND
+                        intent.putExtra(Intent.EXTRA_TEXT, quoteDay.data.title)
+                        intent.type = "text/plain"
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(Intent.createChooser(intent, "Share to:"))
+                    })
                 }
             }
 

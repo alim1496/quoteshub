@@ -13,7 +13,15 @@ import com.example.quoteshub.models.Quote
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import kotlinx.android.synthetic.main.action_buttons_bar.view.*
 import kotlinx.android.synthetic.main.quote_item_full.view.*
+import android.content.ClipData
+import android.content.Context.CLIPBOARD_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+import android.content.ClipboardManager
+import android.content.Intent
+import android.widget.Toast
+
 
 class CategoryQuotesAdapter(val context: Context, var quotes: List<Quote>) : RecyclerView.Adapter<CategoryQuotesAdapter.MyViewHolder>() {
     private val viewPool = RecyclerView.RecycledViewPool()
@@ -41,6 +49,23 @@ class CategoryQuotesAdapter(val context: Context, var quotes: List<Quote>) : Rec
             setRecycledViewPool(viewPool)
         }
 
+        holder.itemView.action_copy.setOnClickListener(View.OnClickListener {
+            val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?;
+            val clip = ClipData.newPlainText("label", quote.title)
+            clipboard!!.setPrimaryClip(clip)
+            Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show()
+        })
+
+        holder.itemView.action_share.setOnClickListener(View.OnClickListener {
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TEXT, quote.title)
+            intent.type = "text/plain"
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            val chooserIntent = Intent.createChooser(intent, "Share to:")
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(chooserIntent)
+        })
     }
 
     fun addItems(newQuotes: List<Quote>) {
