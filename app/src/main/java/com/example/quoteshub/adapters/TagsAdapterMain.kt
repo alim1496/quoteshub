@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quoteshub.R
 import com.example.quoteshub.models.Tag
 
-class TagsAdapterMain(val context: Context, val tags:List<Tag>) : RecyclerView.Adapter<TagsAdapterMain.MyViewHolder>() {
+class TagsAdapterMain(val context: Context, val tags:List<Tag>, val clickListener: (Tag, Int) -> Unit) : RecyclerView.Adapter<TagsAdapterMain.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsAdapterMain.MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.tag_item, parent, false)
         return MyViewHolder(view)
@@ -21,6 +21,7 @@ class TagsAdapterMain(val context: Context, val tags:List<Tag>) : RecyclerView.A
 
     override fun onBindViewHolder(holder: TagsAdapterMain.MyViewHolder, position: Int) {
         val tag = tags[position]
+        holder.itemView.setOnClickListener { clickListener(tag, position) }
         holder.setData(tag)
     }
 

@@ -18,10 +18,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quoteshub.adapters.QuotesAdapter
 import com.example.quoteshub.R
 import com.example.quoteshub.activities.SingleAuthor
+import com.example.quoteshub.activities.SingleCategory
+import com.example.quoteshub.activities.SingleTag
 import com.example.quoteshub.adapters.HomeAuthorsAdapter
 import com.example.quoteshub.adapters.TagsAdapter
 import com.example.quoteshub.models.Author
 import com.example.quoteshub.models.FeedModel
+import com.example.quoteshub.models.Tag
 import com.example.quoteshub.services.DestinationServices
 import com.example.quoteshub.services.ServiceBuilder
 import com.google.android.flexbox.FlexDirection
@@ -106,7 +109,13 @@ class HomeFragment : Fragment() {
                     day_quote_title.text = quoteDay.data.title
                     day_quote_src.text = quoteDay.data.source.name
                     day_tag_recycler.layoutManager = tagsManager
-                    adapter3 = TagsAdapter(activity, quoteDay.data.tags)
+                    adapter3 = TagsAdapter(activity, quoteDay.data.tags) { item: Tag, position: Int ->
+                        val intent = Intent(context, SingleTag::class.java)
+                        intent.putExtra("tagID", item.id)
+                        intent.putExtra("tagName", item.name)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                    }
                     day_tag_recycler.adapter = adapter3
                     action_copy.setOnClickListener(View.OnClickListener {
                         val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?;
@@ -120,7 +129,19 @@ class HomeFragment : Fragment() {
                         intent.putExtra(Intent.EXTRA_TEXT, quoteDay.data.title)
                         intent.type = "text/plain"
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(Intent.createChooser(intent, "Share to:"))
+                        startActivity(Intent.createChooser(intent, "Share Via"))
+                    })
+                    recent_see_all.setOnClickListener(View.OnClickListener {
+                        val intent = Intent(context, SingleCategory::class.java)
+                        intent.putExtra("catName", "Recent Quotes")
+                        intent.putExtra("moreName", "recent=true")
+                        startActivity(intent)
+                    })
+                    featured_see_all.setOnClickListener(View.OnClickListener {
+                        val intent = Intent(context, SingleCategory::class.java)
+                        intent.putExtra("catName", "Featured Quotes")
+                        intent.putExtra("moreName", "featured=true")
+                        startActivity(intent)
                     })
                 }
             }

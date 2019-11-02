@@ -10,9 +10,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quoteshub.R
 import com.example.quoteshub.models.Author
+import com.example.quoteshub.models.Quote
 import com.squareup.picasso.Picasso
 
-class AuthorsAdapter(val context: FragmentActivity, val authors: List<Author>, val clcikListener: (Author, Int) -> Unit)
+class AuthorsAdapter(val context: FragmentActivity, var authors: List<Author>, val clcikListener: (Author, Int) -> Unit)
     : RecyclerView.Adapter<AuthorsAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AuthorsAdapter.MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.author_item, parent, false)
@@ -29,6 +30,11 @@ class AuthorsAdapter(val context: FragmentActivity, val authors: List<Author>, v
         return holder.setData(result)
     }
 
+    fun addItems(newAuthors: List<Author>) {
+        authors += newAuthors
+        notifyDataSetChanged()
+    }
+
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(author: Author) {
             val authName = itemView.findViewById<RecyclerView>(R.id.author_name) as TextView
@@ -36,7 +42,7 @@ class AuthorsAdapter(val context: FragmentActivity, val authors: List<Author>, v
             val authCount = itemView.findViewById<RecyclerView>(R.id.author_quotes) as TextView
 
             authName.text = author.name
-            Picasso.get().load(author.image).into(authImg)
+            Picasso.get().load(author.image).placeholder(R.drawable.avatar_placeholder).into(authImg)
             authCount.text = author.quotes.toString()
         }
     }

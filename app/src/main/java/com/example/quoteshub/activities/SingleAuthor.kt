@@ -3,9 +3,12 @@ package com.example.quoteshub.activities
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.AbsListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.quoteshub.R
 import com.example.quoteshub.adapters.AuthorQuotesAdapter
 import com.example.quoteshub.models.AuthorDetails
 import com.example.quoteshub.services.DestinationServices
@@ -19,7 +22,7 @@ import java.text.FieldPosition
 
 class SingleAuthor : AppCompatActivity() {
     var adapter: AuthorQuotesAdapter?= null
-    var loading: Boolean = true
+    var scrolling: Boolean = false
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
     var pastVisiblesItems: Int = 0
@@ -43,16 +46,22 @@ class SingleAuthor : AppCompatActivity() {
         quotes_title.text = "Quotes By ${name}"
 
         auth_quotes_recycle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrolling = true
+                }
+            }
+
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
                     visibleItemCount = layoutManager.childCount
                     totalItemCount = layoutManager.itemCount
                     pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
-                    if (loading) {
+                    if (scrolling) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            // val page: Int = (totalItemCount/10) + 1
                             pageRequested += 1
-                            loading = false
                             if (id != null) {
                                 loadMore(id, pageRequested)
                             }
@@ -78,12 +87,14 @@ class SingleAuthor : AppCompatActivity() {
     }
 
     private fun loadMore(id: Int, page: Int) {
+        single_author_loader_more.visibility = View.VISIBLE
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<AuthorDetails> = destinationServices.getAuthorDetails(id, page)
         requestCall.enqueue(object: Callback<AuthorDetails> {
             override fun onResponse(call: Call<AuthorDetails>, response: retrofit2.Response<AuthorDetails>) {
 
                 if (response.isSuccessful) {
+                    single_author_loader_more.visibility = View.GONE
                     val authorDetails : AuthorDetails = response.body()!!
                     val authorQuotes = authorDetails.quotes
                     adapter?.addItems(authorQuotes.results)
@@ -91,7 +102,7 @@ class SingleAuthor : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<AuthorDetails>, t: Throwable) {
-                Log.e("alim", "oh ho")
+                single_author_loader_more.visibility = View.GONE
             }
         })
     }
@@ -104,9 +115,12 @@ class SingleAuthor : AppCompatActivity() {
             override fun onResponse(call: Call<AuthorDetails>, response: retrofit2.Response<AuthorDetails>) {
 
                 if (response.isSuccessful) {
+                    single_author_loader.visibility = View.GONE
+                    author_app_bar_layout.visibility = View.VISIBLE
+                    author_linear_layout.visibility = View.VISIBLE
                     val authorDetails : AuthorDetails = response.body()!!
                     quotes_count.text = count.toString()
-                    Picasso.get().load(authorDetails.source.image).into(single_author_img)
+                    Picasso.get().load(authorDetails.source.image).placeholder(R.drawable.avatar_placeholder).into(single_author_img)
                     author_desc.text = authorDetails.source.shortDesc
 
                     val authorQuotes = authorDetails.quotes
@@ -116,7 +130,7 @@ class SingleAuthor : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<AuthorDetails>, t: Throwable) {
-                Log.e("alim", "oh ho")
+                single_author_loader.visibility = View.GONE
             }
         })
     }

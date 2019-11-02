@@ -5,6 +5,8 @@
     <string name="title_notifications">Authors</string>
 
     <string name="common_zero">0</string>
+    <string name="more_loading">loading...</string>
+    <string name="see_all">See All</string>
 
     <!-- single author xml -->
     <string name="author_followers">Followers</string>

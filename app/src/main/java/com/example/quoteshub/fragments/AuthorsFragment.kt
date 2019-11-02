@@ -3,11 +3,14 @@ package com.example.quoteshub.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.quoteshub.AutoFitGLM
 import com.example.quoteshub.R
 import com.example.quoteshub.activities.SingleAuthor
@@ -34,20 +37,69 @@ private const val ARG_PARAM2 = "param2"
  */
 class AuthorsFragment : Fragment() {
     var adapter: AuthorsAdapter? = null
+    var scrolling: Boolean = false
+    var visibleItemCount: Int = 0
+    var totalItemCount: Int = 0
+    var pastVisiblesItems: Int = 0
+    var pageRequested: Int = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val layoutManager = AutoFitGLM(activity, 300)
-        loadData(layoutManager)
         return inflater.inflate(R.layout.fragment_authors, container, false)
     }
 
-    private fun loadData(layoutManager: GridLayoutManager) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val layoutManager = AutoFitGLM(activity, 300)
+
+        author_recyclerview?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrolling = true
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = layoutManager.childCount
+                    totalItemCount = layoutManager.itemCount
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
+                    if (scrolling) {
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            pageRequested += 1
+                            loadMore(pageRequested)
+                        }
+                    }
+                }
+            }
+        })
+
+        loadData(layoutManager, 1)
+    }
+
+    private fun loadMore(page: Int) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<AuthorModel> = destinationServices.getAuthors()
+        val requestCall : Call<AuthorModel> = destinationServices.getAuthors(page)
+        requestCall.enqueue(object: Callback<AuthorModel> {
+            override fun onResponse(call: Call<AuthorModel>, response: retrofit2.Response<AuthorModel>) {
+
+                if (response.isSuccessful) {
+                    val authors : AuthorModel = response.body()!!
+                    adapter?.addItems(authors.results)
+                }
+            }
+
+            override fun onFailure(call: Call<AuthorModel>, t: Throwable) {
+                // single_author_loader_more.visibility = View.GONE
+            }
+        })
+    }
+
+    private fun loadData(layoutManager: GridLayoutManager, page: Int) {
+        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
+        val requestCall : Call<AuthorModel> = destinationServices.getAuthors(page)
         requestCall.enqueue(object: Callback<AuthorModel> {
 
             override fun onResponse(call: Call<AuthorModel>, response: Response<AuthorModel>) {
@@ -73,7 +125,7 @@ class AuthorsFragment : Fragment() {
                 try_again_btn.setOnClickListener(View.OnClickListener {
                     authors_screen_loader.visibility = View.VISIBLE
                     auth_net_err.visibility = View.GONE
-                    loadData(layoutManager)
+                    loadData(layoutManager, 1)
                 })
             }
         })

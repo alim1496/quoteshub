@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".activities.SingleCategory"/>
         <activity android:name=".activities.SingleAuthor"/>
+        <activity android:name=".activities.SingleTag"/>
     </application>
 
 </manifest>

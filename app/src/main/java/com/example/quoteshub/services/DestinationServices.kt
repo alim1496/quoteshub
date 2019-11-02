@@ -21,7 +21,9 @@ interface DestinationServices {
     ): Call<Response>
 
     @GET("quotes/v1/sources/team/")
-    fun getAuthors(): Call<AuthorModel>
+    fun getAuthors(
+        @Query("page") page: Int
+    ): Call<AuthorModel>
 
     @GET("quotes/v1/sources/{id}/details/")
     fun getAuthorDetails(
@@ -29,4 +31,14 @@ interface DestinationServices {
         @Query("page") page: Int
     ): Call<AuthorDetails>
 
+    @GET("quotes/v1/tags/{id}/details/")
+    fun getTagQuotes(
+        @Path("id") id: Int
+    ): Call<TinyResponse>
+
+    @GET("quotes/v1/quotes/more/")
+    fun getMoreQuotes(
+        @Query("more") more: String,
+        @Query("page") page: Int
+    ): Call<Response>
 }

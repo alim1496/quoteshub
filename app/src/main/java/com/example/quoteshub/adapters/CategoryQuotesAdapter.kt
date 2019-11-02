@@ -21,6 +21,8 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.content.ClipboardManager
 import android.content.Intent
 import android.widget.Toast
+import com.example.quoteshub.activities.SingleTag
+import com.example.quoteshub.models.Tag
 
 
 class CategoryQuotesAdapter(val context: Context, var quotes: List<Quote>) : RecyclerView.Adapter<CategoryQuotesAdapter.MyViewHolder>() {
@@ -45,7 +47,13 @@ class CategoryQuotesAdapter(val context: Context, var quotes: List<Quote>) : Rec
 
         holder.itemView.quote_tags.apply {
             layoutManager = tagsManager
-            adapter = TagsAdapterMain(context, quote.tags)
+            adapter = TagsAdapterMain(context, quote.tags) { item: Tag, position: Int ->
+                val intent = Intent(context, SingleTag::class.java)
+                intent.putExtra("tagID", item.id)
+                intent.putExtra("tagName", item.name)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                this.context.startActivity(intent)
+            }
             setRecycledViewPool(viewPool)
         }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.AbsListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,7 @@ import retrofit2.Callback
 
 class SingleCategory : AppCompatActivity() {
     var adapter: CategoryQuotesAdapter? = null
-    var loading: Boolean = true
+    var scrolling: Boolean = false
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
     var pastVisiblesItems: Int = 0
@@ -37,30 +38,43 @@ class SingleCategory : AppCompatActivity() {
 
         val id: Int? = intent.extras?.getInt("catID")
         val name: String? = intent.extras?.getString("catName")
+        val more: String? = intent.extras?.getString("moreName")
         title = name
 
         single_cat_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrolling = true
+                }
+            }
+
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
                     visibleItemCount = layoutManager.childCount
                     totalItemCount = layoutManager.itemCount
                     pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
 
-                    if (loading) {
-                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            // val page: Int = (totalItemCount/10) + 1
+                    if (scrolling) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount
+                            && pastVisiblesItems >= 0 && totalItemCount >= 10) {
                             pageRequested += 1
-                            loading = false
-                            if (id != null) {
-                                loadMore(id, pageRequested)
+                            if (id != null && id != 0) {
+                                fetchMore(id, pageRequested)
+                            } else if (more != null) {
+                                fetchHomeMore(more, pageRequested)
                             }
                         }
                     }
                 }
             }
         })
-        if (id != null) {
-            loadData(layoutManager, id, 1)
+
+        if (id != null && id != 0) {
+            fetchData(layoutManager, id, 1)
+        } else if (more != null) {
+            fetchHomeData(layoutManager, more, 1)
         }
     }
 
@@ -74,9 +88,32 @@ class SingleCategory : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadMore(id: Int, page: Int) {
+    private fun fetchData(layoutManager: LinearLayoutManager, id: Int, page: Int) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<Response> = destinationServices.getCategoryQuotes(id, page)
+        loadData(requestCall, layoutManager)
+    }
+
+    private fun fetchHomeData(layoutManager: LinearLayoutManager, more: String, page: Int) {
+        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
+        val requestCall : Call<Response> = destinationServices.getMoreQuotes(more, page)
+        Log.e("fetch", "yo")
+        loadData(requestCall, layoutManager)
+    }
+
+    private fun fetchMore(id: Int, page: Int) {
+        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
+        val requestCall : Call<Response> = destinationServices.getCategoryQuotes(id, page)
+        loadMore(requestCall)
+    }
+
+    private fun fetchHomeMore(more: String, page: Int) {
+        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
+        val requestCall : Call<Response> = destinationServices.getMoreQuotes(more, page)
+        loadMore(requestCall)
+    }
+
+    private fun loadMore(requestCall : Call<Response>) {
         requestCall.enqueue(object: Callback<Response> {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
 
@@ -92,9 +129,7 @@ class SingleCategory : AppCompatActivity() {
         })
     }
 
-    private fun loadData(layoutManager: LinearLayoutManager, id: Int, page: Int) {
-        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<Response> = destinationServices.getCategoryQuotes(id, page)
+    private fun loadData(requestCall : Call<Response>, layoutManager: LinearLayoutManager) {
         requestCall.enqueue(object: Callback<Response> {
 
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {

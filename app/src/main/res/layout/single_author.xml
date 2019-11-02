@@ -1,142 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_alignParentTop="true"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".activities.SingleAuthor"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.google.android.material.appbar.AppBarLayout
+
+    <ProgressBar
+            android:id="@+id/single_author_loader"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/custom_progress_bar"/>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_height="match_parent">
+        <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/author_app_bar_layout"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
-                app:titleEnabled="false"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <LinearLayout
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="?attr/actionBarSize"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                    app:layout_collapseMode="parallax"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    app:titleEnabled="false"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
                 <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:layout_margin="20dp"
-                        android:orientation="horizontal"
-                >
-                    <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/single_author_img"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center"
-                    />
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="?attr/actionBarSize"
+                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                        app:layout_collapseMode="parallax"
+                        android:orientation="vertical">
                     <LinearLayout
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="10dp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-                        <TextView
-                                android:id="@+id/quotes_count"
-                                android:layout_width="match_parent"
-                                android:layout_height="20dp"
-                                android:gravity="center"
-                                android:text="@string/common_zero"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_margin="20dp"
+                            android:orientation="horizontal"
+                    >
+                        <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/single_author_img"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="center"
                         />
-                        <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="20dp"
+                        <LinearLayout
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="10dp"
                                 android:gravity="center"
-                                android:text="@string/author_quotes"
-                                android:textSize="16sp"
-                        />
+                                android:orientation="vertical">
+                            <TextView
+                                    android:id="@+id/quotes_count"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:gravity="center"
+                                    android:text="@string/common_zero"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif-medium"
+                            />
+                            <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:gravity="center"
+                                    android:text="@string/author_quotes"
+                                    android:textSize="16sp"
+                            />
+                        </LinearLayout>
+                        <LinearLayout
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="10dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                            <TextView
+                                    android:id="@+id/followers_count"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:gravity="center"
+                                    android:text="@string/common_zero"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif-medium"
+                            />
+                            <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:gravity="center"
+                                    android:text="@string/author_followers"
+                                    android:textSize="16sp"
+                            />
+                        </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="10dp"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                            android:id="@+id/auth_desc_holder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
                         <TextView
-                                android:id="@+id/followers_count"
-                                android:layout_width="match_parent"
-                                android:layout_height="20dp"
-                                android:gravity="center"
-                                android:text="@string/common_zero"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium"
-                        />
-                        <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="20dp"
-                                android:gravity="center"
-                                android:text="@string/author_followers"
-                                android:textSize="16sp"
+                                android:paddingStart="20dp"
+                                android:paddingEnd="20dp"
+                                android:paddingBottom="20dp"
+                                android:id="@+id/author_desc"
+                                android:fontFamily="sans-serif"
+                                android:textSize="14sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                         />
                     </LinearLayout>
                 </LinearLayout>
-                <LinearLayout
-                        android:id="@+id/auth_desc_holder"
+
+                <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/collapseToolbar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="?attr/actionBarSize"
+                        app:layout_collapseMode="pin"
+                        android:background="#87F345"
+                        android:elevation="10dp"
+                />
 
-                    <TextView
-                            android:paddingStart="20dp"
-                            android:paddingEnd="20dp"
-                            android:paddingBottom="20dp"
-                            android:id="@+id/author_desc"
-                            android:fontFamily="sans-serif"
-                            android:textSize="14sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                    />
-                </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/collapseToolbar"
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <LinearLayout
+                android:id="@+id/author_linear_layout"
+                android:visibility="invisible"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/quotes_title"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    android:background="#87F345"
-                    android:elevation="10dp"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:background="@drawable/toolbar_dropshadow"
             />
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <TextView
-                android:id="@+id/quotes_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textSize="20sp"
-                android:fontFamily="sans-serif-medium"
-                android:background="@drawable/toolbar_dropshadow"
-        />
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/auth_quotes_recycle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="10dp"
-        />
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/auth_quotes_recycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp"
+            />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:id="@+id/single_author_loader_more"
+                    android:text="@string/more_loading"
+            />
+        </LinearLayout>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

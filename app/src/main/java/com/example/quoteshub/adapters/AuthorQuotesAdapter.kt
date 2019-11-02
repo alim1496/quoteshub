@@ -21,7 +21,8 @@ import kotlinx.android.synthetic.main.action_buttons_bar.view.*
 import kotlinx.android.synthetic.main.author_quote_item.view.*
 import java.lang.Exception
 import androidx.core.content.ContextCompat.startActivity
-
+import com.example.quoteshub.activities.SingleTag
+import com.example.quoteshub.models.Tag
 
 
 class AuthorQuotesAdapter(val context: Context, var quotes: List<Quote>) : RecyclerView.Adapter<AuthorQuotesAdapter.MyViewHolder>() {
@@ -49,7 +50,13 @@ class AuthorQuotesAdapter(val context: Context, var quotes: List<Quote>) : Recyc
 
         holder.itemView.author_quote_tags.apply {
             layoutManager = tagsManager
-            adapter = TagsAdapterMain(context, quote.tags)
+            adapter = TagsAdapterMain(context, quote.tags) { item: Tag, position: Int ->
+                val intent = Intent(context, SingleTag::class.java)
+                intent.putExtra("tagID", item.id)
+                intent.putExtra("tagName", item.name)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                this.context.startActivity(intent)
+            }
             setRecycledViewPool(viewPool)
         }
 
