@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.example.quoteshub.fragments.AddQuoteFragment
 import com.example.quoteshub.fragments.AuthorsFragment
 import com.example.quoteshub.fragments.CategoriesFragment
 import com.example.quoteshub.fragments.HomeFragment
@@ -27,6 +28,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.navigation_notifications -> {
                 replaceFragment(AuthorsFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_add_quote -> {
+                replaceFragment(AddQuoteFragment())
                 return@OnNavigationItemSelectedListener true
             }
         }
