@@ -10,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quoteshub.AutoFitGLM
 import com.example.quoteshub.R
 import com.example.quoteshub.activities.SingleAuthor
+import com.example.quoteshub.adapters.AlphabetAdapter
 import com.example.quoteshub.adapters.AuthorsAdapter
 import com.example.quoteshub.models.Author
 import com.example.quoteshub.models.AuthorModel
@@ -42,6 +44,7 @@ class AuthorsFragment : Fragment() {
     var totalItemCount: Int = 0
     var pastVisiblesItems: Int = 0
     var pageRequested: Int = 1
+    var letterSelected: String = "A"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +54,19 @@ class AuthorsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val letterManager = AutoFitGLM(activity, 90)
         val layoutManager = AutoFitGLM(activity, 300)
+
+        val letters = arrayOf('A','B','C','D','E','F','G','H','I','J','K','L','M',
+            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z')
+        alphabet_recycler.layoutManager = letterManager
+        alphabet_recycler.adapter = activity?.let { AlphabetAdapter(it, letters) { letter: String, positon: Int ->
+            pageRequested = 1
+            letterSelected = letter
+            authors_screen_loader.visibility = View.VISIBLE
+            author_recyclerview.visibility = View.GONE
+            loadData(layoutManager, pageRequested, letterSelected)
+        }}
 
         author_recyclerview?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -69,19 +84,19 @@ class AuthorsFragment : Fragment() {
                     if (scrolling) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
                             pageRequested += 1
-                            loadMore(pageRequested)
+                            loadMore(pageRequested, letterSelected)
                         }
                     }
                 }
             }
         })
 
-        loadData(layoutManager, 1)
+        loadData(layoutManager, pageRequested, letterSelected)
     }
 
-    private fun loadMore(page: Int) {
+    private fun loadMore(page: Int, letter: String) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<AuthorModel> = destinationServices.getAuthors(page)
+        val requestCall : Call<AuthorModel> = destinationServices.getAuthors(page, letter)
         requestCall.enqueue(object: Callback<AuthorModel> {
             override fun onResponse(call: Call<AuthorModel>, response: retrofit2.Response<AuthorModel>) {
 
@@ -97,9 +112,9 @@ class AuthorsFragment : Fragment() {
         })
     }
 
-    private fun loadData(layoutManager: GridLayoutManager, page: Int) {
+    private fun loadData(layoutManager: GridLayoutManager, page: Int, letter: String) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<AuthorModel> = destinationServices.getAuthors(page)
+        val requestCall : Call<AuthorModel> = destinationServices.getAuthors(page, letter)
         requestCall.enqueue(object: Callback<AuthorModel> {
 
             override fun onResponse(call: Call<AuthorModel>, response: Response<AuthorModel>) {
@@ -125,7 +140,7 @@ class AuthorsFragment : Fragment() {
                 try_again_btn.setOnClickListener(View.OnClickListener {
                     authors_screen_loader.visibility = View.VISIBLE
                     auth_net_err.visibility = View.GONE
-                    loadData(layoutManager, 1)
+                    loadData(layoutManager, pageRequested, letterSelected)
                 })
             }
         })

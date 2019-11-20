@@ -5,6 +5,30 @@
              android:layout_height="match_parent"
              tools:context=".fragments.AuthorsFragment">
 
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+    >
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/alphabet_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+        />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/author_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:visibility="invisible"
+        />
+
+    </LinearLayout>
+
     <ProgressBar
             android:id="@+id/authors_screen_loader"
             android:layout_width="70dp"
@@ -12,15 +36,6 @@
             android:layout_gravity="center"
             android:indeterminate="true"
             android:indeterminateDrawable="@drawable/custom_progress_bar"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/author_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:visibility="invisible"
-    />
 
     <include
             android:id="@+id/auth_net_err"

@@ -22,7 +22,8 @@ interface DestinationServices {
 
     @GET("quotes/v1/sources/team/")
     fun getAuthors(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("alphabet") alphabet: String
     ): Call<AuthorModel>
 
     @GET("quotes/v1/sources/{id}/details/")
