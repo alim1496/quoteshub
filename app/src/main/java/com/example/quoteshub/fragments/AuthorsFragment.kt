@@ -21,6 +21,9 @@ import com.example.quoteshub.models.Author
 import com.example.quoteshub.models.AuthorModel
 import com.example.quoteshub.services.DestinationServices
 import com.example.quoteshub.services.ServiceBuilder
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_authors.*
 import retrofit2.Call
@@ -54,7 +57,10 @@ class AuthorsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val letterManager = AutoFitGLM(activity, 90)
+        val letterManager = FlexboxLayoutManager(context)
+        letterManager.flexDirection = FlexDirection.ROW
+        letterManager.justifyContent = JustifyContent.CENTER
+
         val layoutManager = AutoFitGLM(activity, 300)
 
         val letters = arrayOf('A','B','C','D','E','F','G','H','I','J','K','L','M',
