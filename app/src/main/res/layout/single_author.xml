@@ -162,7 +162,32 @@
                     android:id="@+id/single_author_loader_more"
                     android:text="@string/more_loading"
             />
+
+            <LinearLayout
+                    android:layout_marginTop="50dp"
+                    android:id="@+id/tv_empty-author-quote"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/empty_authors"
+                        android:layout_gravity="center"
+                        />
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="No Quote Found"
+                        />
+
+            </LinearLayout>
+
         </LinearLayout>
+
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

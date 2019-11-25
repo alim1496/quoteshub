@@ -126,6 +126,10 @@ class SingleAuthor : AppCompatActivity() {
                     val authorQuotes = authorDetails.quotes
                     adapter = AuthorQuotesAdapter(applicationContext, authorQuotes.results)
                     auth_quotes_recycle.adapter = adapter
+
+                    if (authorQuotes.results.size == 0) {
+                        tv_empty_author_quote.visibility = View.VISIBLE
+                    }
                 }
             }
 

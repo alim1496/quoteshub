@@ -71,6 +71,7 @@ class AuthorsFragment : Fragment() {
             letterSelected = letter
             authors_screen_loader.visibility = View.VISIBLE
             author_recyclerview.visibility = View.GONE
+            tv_empty_author.visibility = View.GONE
             loadData(layoutManager, pageRequested, letterSelected)
         }}
 
@@ -137,6 +138,9 @@ class AuthorsFragment : Fragment() {
                         startActivity(intent)
                     } }
                     author_recyclerview.adapter = adapter
+                    if (authors.results.size == 0) {
+                        tv_empty_author.visibility = View.VISIBLE
+                    }
                 }
             }
 

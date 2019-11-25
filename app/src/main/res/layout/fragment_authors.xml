@@ -37,6 +37,29 @@
             android:indeterminate="true"
             android:indeterminateDrawable="@drawable/custom_progress_bar"/>
 
+    <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/tv_empty-author"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/empty_authors"
+                android:layout_gravity="center"
+                />
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="No Author Found"
+                />
+
+    </LinearLayout>
+
     <include
             android:id="@+id/auth_net_err"
             layout="@layout/common_error_container"/>
