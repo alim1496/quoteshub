@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:445483288265:android:4a65aea79e36b0cc",
         "android_client_info": {
-          "package_name": "com.example.quoteshub"
+          "package_name": "com.appwiz.quoteshub"
         }
       },
       "oauth_client": [
@@ -55,7 +55,7 @@
           "client_id": "445483288265-mrngt016j79q1uuj36qogmbav813bj3t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.quoteshub",
+            "package_name": "com.appwiz.quoteshub",
             "certificate_hash": "ee937e12afdf36fe19963bbcdac9b33ca7c88410"
           }
         },
