@@ -7,8 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
-import com.appwiz.quoteshub.AutoFitGLM
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.activities.SingleCategory
 import com.appwiz.quoteshub.adapters.CategoriesAdapter
@@ -16,6 +14,9 @@ import com.appwiz.quoteshub.models.Category
 import com.appwiz.quoteshub.models.CategoryModel
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_categories.*
 import retrofit2.Call
@@ -40,12 +41,14 @@ class CategoriesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val layoutManager = AutoFitGLM(activity, 500)
+        val layoutManager = FlexboxLayoutManager(context)
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.SPACE_BETWEEN
         loadData(layoutManager)
         return inflater.inflate(R.layout.fragment_categories, container, false)
     }
 
-    private fun loadData(layoutManager: GridLayoutManager) {
+    private fun loadData(layoutManager: FlexboxLayoutManager) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<CategoryModel> = destinationServices.getCategories()
         requestCall.enqueue(object: Callback<CategoryModel> {

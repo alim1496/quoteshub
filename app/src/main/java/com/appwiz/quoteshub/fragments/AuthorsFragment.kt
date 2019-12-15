@@ -8,9 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.appwiz.quoteshub.AutoFitGLM
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.activities.SingleAuthor
 import com.appwiz.quoteshub.adapters.AlphabetAdapter
@@ -59,7 +57,9 @@ class AuthorsFragment : Fragment() {
         letterManager.flexDirection = FlexDirection.ROW
         letterManager.justifyContent = JustifyContent.CENTER
 
-        val layoutManager = AutoFitGLM(activity, 300)
+        val layoutManager = FlexboxLayoutManager(activity)
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.FLEX_START
 
         val letters = arrayOf('A','B','C','D','E','F','G','H','I','J','K','L','M',
             'N','O','P','Q','R','S','T','U','V','W','X','Y','Z')
@@ -117,7 +117,7 @@ class AuthorsFragment : Fragment() {
         })
     }
 
-    private fun loadData(layoutManager: GridLayoutManager, page: Int, letter: String) {
+    private fun loadData(layoutManager: FlexboxLayoutManager, page: Int, letter: String) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<AuthorModel> = destinationServices.getAuthors(page, letter)
         requestCall.enqueue(object: Callback<AuthorModel> {
