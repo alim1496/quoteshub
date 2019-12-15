@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
-import com.appwiz.quoteshub.adapters.AuthorQuotesAdapter
+import com.appwiz.quoteshub.adapters.QuotesAdapter
 import com.appwiz.quoteshub.models.AuthorDetails
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
@@ -19,7 +19,7 @@ import retrofit2.Callback
 
 
 class SingleAuthor : AppCompatActivity() {
-    var adapter: AuthorQuotesAdapter?= null
+    var adapter: QuotesAdapter?= null
     var scrolling: Boolean = false
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
@@ -122,7 +122,7 @@ class SingleAuthor : AppCompatActivity() {
                     author_desc.text = authorDetails.source.shortDesc
 
                     val authorQuotes = authorDetails.quotes
-                    adapter = AuthorQuotesAdapter(applicationContext, authorQuotes.results)
+                    adapter = QuotesAdapter(applicationContext, authorQuotes.results)
                     auth_quotes_recycle.adapter = adapter
 
                     if (authorQuotes.results.size == 0) {

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
-import com.appwiz.quoteshub.adapters.CategoryQuotesAdapter
+import com.appwiz.quoteshub.adapters.QuotesAdapter
 import com.appwiz.quoteshub.models.Response
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
@@ -18,7 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 
 class SingleCategory : AppCompatActivity() {
-    var adapter: CategoryQuotesAdapter? = null
+    var adapter: QuotesAdapter? = null
     var scrolling: Boolean = false
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
@@ -137,7 +137,7 @@ class SingleCategory : AppCompatActivity() {
                     single_cat_recycler.visibility = View.VISIBLE
                     val quoteList : Response = response.body()!!
                     single_cat_recycler.layoutManager = layoutManager
-                    adapter = CategoryQuotesAdapter(applicationContext, quoteList.results)
+                    adapter = QuotesAdapter(applicationContext, quoteList.results)
                     single_cat_recycler.adapter = adapter
                 }
             }

@@ -32,9 +32,11 @@ class HomeAuthorsAdapter(val context: FragmentActivity, val authors: List<Author
         fun setData(author: Author) {
             val authName = itemView.findViewById<RecyclerView>(R.id.home_author_name) as TextView
             val authImg = itemView.findViewById<RecyclerView>(R.id.home_author_img) as ImageView
+            val authQuotes = itemView.findViewById<RecyclerView>(R.id.home_author_quotes) as TextView
 
             authName.text = author.name
             Picasso.get().load(author.image).placeholder(R.drawable.avatar_placeholder).into(authImg)
+            authQuotes.text = author.quotes.toString()
         }
     }
 }

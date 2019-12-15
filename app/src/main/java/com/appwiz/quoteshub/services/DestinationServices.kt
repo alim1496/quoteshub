@@ -35,7 +35,7 @@ interface DestinationServices {
     @GET("quotes/v1/tags/{id}/details/")
     fun getTagQuotes(
         @Path("id") id: Int
-    ): Call<TinyResponse>
+    ): Call<Response>
 
     @GET("quotes/v1/quotes/more/")
     fun getMoreQuotes(

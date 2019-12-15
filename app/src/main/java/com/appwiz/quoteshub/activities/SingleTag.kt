@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
-import com.appwiz.quoteshub.adapters.TagQuotesAdapter
-import com.appwiz.quoteshub.models.TinyResponse
+import com.appwiz.quoteshub.adapters.QuotesAdapter
+import com.appwiz.quoteshub.models.Response
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
 import kotlinx.android.synthetic.main.single_tag.*
@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 
 class SingleTag : AppCompatActivity() {
-    var adapter: TagQuotesAdapter? = null
+    var adapter: QuotesAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,22 +49,22 @@ class SingleTag : AppCompatActivity() {
 
     private fun loadData(layoutManager: LinearLayoutManager, id: Int) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<TinyResponse> = destinationServices.getTagQuotes(id)
-        requestCall.enqueue(object: Callback<TinyResponse> {
+        val requestCall : Call<Response> = destinationServices.getTagQuotes(id)
+        requestCall.enqueue(object: Callback<Response> {
 
-            override fun onResponse(call: Call<TinyResponse>, response: retrofit2.Response<TinyResponse>) {
+            override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
 
                 if (response.isSuccessful) {
                     single_tag_loader.visibility = View.GONE
                     single_tag_recycler.visibility = View.VISIBLE
-                    val quoteList : TinyResponse = response.body()!!
+                    val quoteList : Response = response.body()!!
                     single_tag_recycler.layoutManager = layoutManager
-                    adapter = TagQuotesAdapter(applicationContext, quoteList.results)
+                    adapter = QuotesAdapter(applicationContext, quoteList.results, false)
                     single_tag_recycler.adapter = adapter
                 }
             }
 
-            override fun onFailure(call: Call<TinyResponse>, t: Throwable) {
+            override fun onFailure(call: Call<Response>, t: Throwable) {
                 Log.e("alim", "oh ho")
             }
         })

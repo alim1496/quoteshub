@@ -1,5 +1,6 @@
 package com.appwiz.quoteshub.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.models.Tag
 
-class TagsAdapter(val context: FragmentActivity?, val tags:List<Tag>, val clickListener: (Tag, Int) -> Unit) : RecyclerView.Adapter<TagsAdapter.MyViewHolder>() {
+class TagsAdapter(val context: Context, val tags:List<Tag>, val clickListener: (Tag, Int) -> Unit) : RecyclerView.Adapter<TagsAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsAdapter.MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.tag_item, parent, false)
         return MyViewHolder(view)

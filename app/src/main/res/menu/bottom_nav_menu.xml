@@ -16,8 +16,4 @@
             android:icon="@drawable/ic_group_black_24dp"
             android:title="@string/title_notifications"/>
 
-    <item
-            android:id="@+id/navigation_add_quote"
-            android:icon="@drawable/ic_add_circle_outline_black_24dp"
-            android:title="Add Quote"/>
 </menu>
