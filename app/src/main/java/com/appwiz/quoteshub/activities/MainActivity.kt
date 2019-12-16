@@ -1,10 +1,11 @@
-package com.appwiz.quoteshub
+package com.appwiz.quoteshub.activities
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.fragments.AuthorsFragment
 import com.appwiz.quoteshub.fragments.CategoriesFragment
 import com.appwiz.quoteshub.fragments.HomeFragment

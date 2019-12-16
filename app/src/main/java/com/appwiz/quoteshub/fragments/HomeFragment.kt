@@ -14,7 +14,7 @@ import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.activities.SingleAuthor
 import com.appwiz.quoteshub.activities.SingleCategory
 import com.appwiz.quoteshub.activities.SingleTag
-import com.appwiz.quoteshub.adapters.HomeAuthorsAdapter
+import com.appwiz.quoteshub.adapters.AuthorsAdapter
 import com.appwiz.quoteshub.adapters.TagsAdapter
 import com.appwiz.quoteshub.models.Author
 import com.appwiz.quoteshub.models.FeedModel
@@ -45,7 +45,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class HomeFragment : Fragment() {
     var adapter : HomeQuotesAdapter? = null
-    var adapter2 : HomeAuthorsAdapter? = null
+    var adapter2 : AuthorsAdapter? = null
     var adapter3 : TagsAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -90,7 +90,7 @@ class HomeFragment : Fragment() {
                     val featuredAuthors = feedResponse.FeaturedAuthors
                     featured_authors_title.text = featuredAuthors.title
                     authors_recyclerview.layoutManager = authorsManager
-                    adapter2 = activity?.let { HomeAuthorsAdapter(it, featuredAuthors.data) { author: Author, position: Int ->
+                    adapter2 = activity?.let { AuthorsAdapter(it, featuredAuthors.data) { author: Author, position: Int ->
                         val intent = Intent(context, SingleAuthor::class.java)
                         intent.putExtra("authorID", author.id)
                         intent.putExtra("authorname", author.name)
