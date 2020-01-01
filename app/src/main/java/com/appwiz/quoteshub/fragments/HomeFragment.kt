@@ -3,10 +3,12 @@ package com.appwiz.quoteshub.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.adapters.HomeQuotesAdapter
@@ -15,6 +17,7 @@ import com.appwiz.quoteshub.activities.SingleAuthor
 import com.appwiz.quoteshub.activities.SingleCategory
 import com.appwiz.quoteshub.activities.SingleTag
 import com.appwiz.quoteshub.adapters.AuthorsAdapter
+import com.appwiz.quoteshub.adapters.EventsAdapter
 import com.appwiz.quoteshub.adapters.TagsAdapter
 import com.appwiz.quoteshub.models.Author
 import com.appwiz.quoteshub.models.FeedModel
@@ -47,6 +50,7 @@ class HomeFragment : Fragment() {
     var adapter : HomeQuotesAdapter? = null
     var adapter2 : AuthorsAdapter? = null
     var adapter3 : TagsAdapter? = null
+    var adapter4 : EventsAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -54,15 +58,17 @@ class HomeFragment : Fragment() {
         val featuredManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         val authorsManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         val tagsManager = FlexboxLayoutManager(activity)
+        val eventsManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         tagsManager.flexDirection = FlexDirection.ROW
         tagsManager.justifyContent = JustifyContent.FLEX_START
 
-        loadFeed(layoutManager, featuredManager, authorsManager, tagsManager)
+        loadFeed(layoutManager, featuredManager, authorsManager, tagsManager, eventsManager)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     private fun loadFeed(layoutManager : LinearLayoutManager, featuredManager: LinearLayoutManager,
-                         authorsManager: LinearLayoutManager, tagsManager: FlexboxLayoutManager) {
+                         authorsManager: LinearLayoutManager, tagsManager: FlexboxLayoutManager,
+                         eventsManager: LinearLayoutManager) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<FeedModel> = destinationServices.getFeed()
         requestCall.enqueue(object: Callback<FeedModel> {
@@ -74,12 +80,15 @@ class HomeFragment : Fragment() {
                     home_screen_container.visibility = View.VISIBLE
 
                     val feedResponse: FeedModel = response.body()!!
-
+                    Log.e("feed", "${feedResponse}");
                     val recentQuotes = feedResponse.RecentQuotes
                     recent_quotes_title.text = recentQuotes.title
                     recyclerView.layoutManager = layoutManager
                     adapter = HomeQuotesAdapter(activity, recentQuotes.data)
                     recyclerView.adapter = adapter
+                    if (recentQuotes.data.size == 0) {
+                        recent_quotes_container.visibility = View.GONE
+                    }
 
                     val featuredQuotes = feedResponse.FeaturedQuotes
                     featured_quotes_title.text = featuredQuotes.title
@@ -114,6 +123,13 @@ class HomeFragment : Fragment() {
                         }
                     }
                     day_tag_recycler.adapter = adapter3
+
+                    val eventsDay = feedResponse.EventsToday
+                    today_events_title.text = eventsDay.title
+                    events_recyclerview.layoutManager = eventsManager
+                    adapter4 = EventsAdapter(context as FragmentActivity?, eventsDay.data)
+                    events_recyclerview.adapter = adapter4
+
                     action_copy.setOnClickListener(View.OnClickListener {
                         context?.let { it1 -> CommonUtils().copyQuote(it1, quoteDay.data.title) }
                     })
@@ -141,7 +157,7 @@ class HomeFragment : Fragment() {
                 try_again_btn.setOnClickListener(View.OnClickListener {
                     home_screen_loader.visibility = View.VISIBLE
                     net_err_holder.visibility = View.GONE
-                    loadFeed(layoutManager, featuredManager, authorsManager, tagsManager)
+                    loadFeed(layoutManager, featuredManager, authorsManager, tagsManager, eventsManager)
                 })
             }
         })

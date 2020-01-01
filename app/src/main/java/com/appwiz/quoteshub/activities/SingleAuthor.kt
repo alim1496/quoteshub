@@ -125,8 +125,10 @@ class SingleAuthor : AppCompatActivity() {
                     adapter = QuotesAdapter(applicationContext, authorQuotes.results)
                     auth_quotes_recycle.adapter = adapter
 
-                    if (authorQuotes.results.size == 0) {
+                    if (authorQuotes.results.isEmpty()) {
                         tv_empty_author_quote.visibility = View.VISIBLE
+                    } else {
+                        tv_empty_author_quote.visibility = View.GONE
                     }
                 }
             }

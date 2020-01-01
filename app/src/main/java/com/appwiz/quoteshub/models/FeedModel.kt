@@ -4,7 +4,8 @@ data class FeedModel (
     var FeaturedQuotes: SingleFeedQuote,
     var RecentQuotes: SingleFeedQuote,
     var FeaturedAuthors: SingleFeedAuthor,
-    var DayQuote: SingleQuote
+    var DayQuote: SingleQuote,
+    var EventsToday: EventList
 )
 
 data class SingleFeedQuote (
@@ -26,4 +27,17 @@ data class SingleFeedAuthor (
     var title: String,
     var layout: String,
     var data: List<Author>
+)
+
+data class EventList (
+    var type: String,
+    var title: String,
+    var layout: String,
+    var data: List<Event>
+)
+
+data class Event (
+    var id: Int,
+    var text: String,
+    var type: Int
 )
