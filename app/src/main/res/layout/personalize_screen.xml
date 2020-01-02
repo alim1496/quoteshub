@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/person_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#87F345"
+            android:elevation="10dp"
+    />
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:text="@string/find_fb_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                android:id="@+id/tv_fb_page"
+                android:clickable="true"
+                android:focusable="true"/>
+
+        <TextView
+                android:id="@+id/tv_tnc"
+                android:clickable="true"
+                android:focusable="true"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/terms_condition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/tv_policy"
+                android:clickable="true"
+                android:focusable="true"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/privacy_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

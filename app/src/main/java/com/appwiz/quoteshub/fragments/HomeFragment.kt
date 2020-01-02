@@ -80,13 +80,12 @@ class HomeFragment : Fragment() {
                     home_screen_container.visibility = View.VISIBLE
 
                     val feedResponse: FeedModel = response.body()!!
-                    Log.e("feed", "${feedResponse}");
                     val recentQuotes = feedResponse.RecentQuotes
                     recent_quotes_title.text = recentQuotes.title
                     recyclerView.layoutManager = layoutManager
                     adapter = HomeQuotesAdapter(activity, recentQuotes.data)
                     recyclerView.adapter = adapter
-                    if (recentQuotes.data.size == 0) {
+                    if (recentQuotes.data.isEmpty()) {
                         recent_quotes_container.visibility = View.GONE
                     }
 
@@ -129,6 +128,9 @@ class HomeFragment : Fragment() {
                     events_recyclerview.layoutManager = eventsManager
                     adapter4 = EventsAdapter(context as FragmentActivity?, eventsDay.data)
                     events_recyclerview.adapter = adapter4
+                    if (eventsDay.data.isEmpty()) {
+                        today_events_container.visibility = View.GONE
+                    }
 
                     action_copy.setOnClickListener(View.OnClickListener {
                         context?.let { it1 -> CommonUtils().copyQuote(it1, quoteDay.data.title) }

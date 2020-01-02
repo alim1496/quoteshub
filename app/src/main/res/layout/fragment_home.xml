@@ -191,6 +191,7 @@
             </LinearLayout>
 
             <LinearLayout
+                    android:id="@+id/today_events_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#ffffff"
@@ -228,6 +229,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
     <include

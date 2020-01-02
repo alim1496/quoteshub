@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.appwiz.quoteshub">
+          xmlns:tools="http://schemas.android.com/tools" package="com.appwiz.quoteshub">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -24,6 +24,9 @@
         <activity android:name="com.appwiz.quoteshub.activities.SingleCategory"/>
         <activity android:name="com.appwiz.quoteshub.activities.SingleAuthor"/>
         <activity android:name="com.appwiz.quoteshub.activities.SingleTag"/>
+        <activity android:name="com.appwiz.quoteshub.activities.Personalize"/>
+        <activity android:name="com.appwiz.quoteshub.activities.Conditions"/>
+        <activity android:name="com.appwiz.quoteshub.activities.Privacy"/>
     </application>
 
 </manifest>
