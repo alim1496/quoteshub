@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         btn_personalize.setOnClickListener {
             startActivity(Intent(this, Personalize::class.java))
         }
+
     }
 
     private fun replaceFragment(fragment: Fragment) {

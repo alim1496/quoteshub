@@ -58,6 +58,10 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>, val showQuote
             holder.itemView.author_quote_tags.visibility = View.GONE
         }
 
+        holder.itemView.action_favorite.setOnClickListener(View.OnClickListener {
+            CommonUtils().favQuote(context, quote)
+        })
+
         holder.itemView.action_copy.setOnClickListener(View.OnClickListener {
             CommonUtils().copyQuote(context, quote.title)
         })

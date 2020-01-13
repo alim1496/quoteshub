@@ -20,6 +20,10 @@ class Personalize : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = "Miscellaneous"
 
+        fav_list.setOnClickListener {
+            startActivity(Intent(this, Favorites::class.java))
+        }
+
         tv_fb_page.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(Constants.fbPage)
