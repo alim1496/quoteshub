@@ -11,4 +11,7 @@ interface FavDao {
 
     @Query("select * from FavEntity")
     fun showAll() : List<FavEntity>
+
+    @Query("delete from FavEntity where id = :id")
+    fun removeFav(id:Int)
 }

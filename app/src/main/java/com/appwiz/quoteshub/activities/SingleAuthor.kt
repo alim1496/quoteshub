@@ -25,6 +25,7 @@ class SingleAuthor : AppCompatActivity() {
     var totalItemCount: Int = 0
     var pastVisiblesItems: Int = 0
     var pageRequested: Int = 1
+    var name: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +35,7 @@ class SingleAuthor : AppCompatActivity() {
 
         val id = intent.extras?.getInt("authorID")
         val count = intent.extras?.getInt("authorQuotes")
-        val name = intent.extras?.getString("authorname")
+        name = intent.extras?.getString("authorname")
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = RecyclerView.VERTICAL
@@ -122,7 +123,7 @@ class SingleAuthor : AppCompatActivity() {
                     author_desc.text = authorDetails.source.shortDesc
 
                     val authorQuotes = authorDetails.quotes
-                    adapter = QuotesAdapter(applicationContext, authorQuotes.results)
+                    adapter = name?.let { QuotesAdapter(applicationContext, authorQuotes.results, true, it) }
                     auth_quotes_recycle.adapter = adapter
 
                     if (authorQuotes.results.isEmpty()) {

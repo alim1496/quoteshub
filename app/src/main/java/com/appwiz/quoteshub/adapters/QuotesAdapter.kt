@@ -19,7 +19,9 @@ import com.appwiz.quoteshub.models.Tag
 import com.appwiz.quoteshub.utils.CommonUtils
 
 
-class QuotesAdapter(val context: Context, var quotes: List<Quote>, val showQuotes: Boolean = true) : RecyclerView.Adapter<QuotesAdapter.MyViewHolder>() {
+class QuotesAdapter(val context: Context, var quotes: List<Quote>,
+                    val showQuotes: Boolean = true, val authorName: String = "")
+    : RecyclerView.Adapter<QuotesAdapter.MyViewHolder>() {
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(
@@ -58,9 +60,20 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>, val showQuote
             holder.itemView.author_quote_tags.visibility = View.GONE
         }
 
-        holder.itemView.action_favorite.setOnClickListener(View.OnClickListener {
-            CommonUtils().favQuote(context, quote)
-        })
+        if (CommonUtils().checkFavoritePref(context, quote.id)) {
+            holder.itemView.action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
+            holder.itemView.action_favorite.setOnClickListener {
+                CommonUtils().unfavQuote(context, quote.id) {
+                    holder.itemView.action_favorite.setImageResource(R.drawable.ic_star_border_black_24dp)
+                }
+            }
+        } else {
+            holder.itemView.action_favorite.setOnClickListener {
+                CommonUtils().favQuote(context, quote, authorName) {
+                    holder.itemView.action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
+                }
+            }
+        }
 
         holder.itemView.action_copy.setOnClickListener(View.OnClickListener {
             CommonUtils().copyQuote(context, quote.title)

@@ -3,18 +3,23 @@ package com.appwiz.quoteshub.activities
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.FavAdapter
 import com.appwiz.quoteshub.room.AppDB
 import kotlinx.android.synthetic.main.favorite_quotes_list.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 
-class Favorites : AppCompatActivity() {
+class Favorites : AppCompatActivity(), CoroutineScope {
+    private val job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +33,9 @@ class Favorites : AppCompatActivity() {
 
         val adapter = FavAdapter(this)
         fav_recycler.adapter = adapter
-        fav_recycler.layoutManager = LinearLayoutManager(this)
+        fav_recycler.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
 
-        GlobalScope.launch {
+        launch {
             adapter.setFav(db.favDao().showAll())
         }
 
@@ -44,5 +49,10 @@ class Favorites : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }
