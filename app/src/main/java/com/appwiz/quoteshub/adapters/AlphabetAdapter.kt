@@ -1,5 +1,6 @@
 package com.appwiz.quoteshub.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,9 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
+import kotlinx.android.synthetic.main.letter_item.view.*
 
 class AlphabetAdapter(val context: FragmentActivity, var letters: Array<Char>, val clcikListener: (String, Int) -> Unit)
     : RecyclerView.Adapter<AlphabetAdapter.MyViewHolder>() {
+    private var rowIndex: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlphabetAdapter.MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.letter_item, parent, false)
@@ -24,8 +27,16 @@ class AlphabetAdapter(val context: FragmentActivity, var letters: Array<Char>, v
         val result = letters[position].toString()
         holder.itemView.setOnClickListener {
             clcikListener(result, position)
+            rowIndex = position
+            notifyDataSetChanged()
         }
+
         holder.setData(result)
+
+        if (rowIndex == position) {
+            holder.itemView.setBackgroundColor(Color.parseColor("#48C77C"))
+            holder.itemView.tv_letter_item.setTextColor(Color.parseColor("#ffffff"))
+        }
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
