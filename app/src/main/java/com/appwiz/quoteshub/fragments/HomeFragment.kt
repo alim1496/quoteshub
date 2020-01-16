@@ -29,6 +29,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.action_buttons_bar.*
+import kotlinx.android.synthetic.main.action_buttons_bar.view.*
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
@@ -102,7 +103,6 @@ class HomeFragment : Fragment() {
                         val intent = Intent(context, SingleAuthor::class.java)
                         intent.putExtra("authorID", author.id)
                         intent.putExtra("authorname", author.name)
-                        intent.putExtra("authorQuotes", author.quotes)
                         startActivity(intent)
                     } }
                     authors_recyclerview.adapter = adapter2
@@ -132,11 +132,19 @@ class HomeFragment : Fragment() {
                         today_events_container.visibility = View.GONE
                     }
 
+                    action_favorite.setOnClickListener {
+                        context?.let { it1 ->
+                            CommonUtils().favQuote(it1, quoteDay.data, "") {
+                                action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
+                            }
+                        }
+                    }
+
                     action_copy.setOnClickListener(View.OnClickListener {
-                        context?.let { it1 -> CommonUtils().copyQuote(it1, quoteDay.data.title) }
+                        context?.let { it1 -> CommonUtils().copyQuote(it1, quoteDay.data, "") }
                     })
                     action_share.setOnClickListener(View.OnClickListener {
-                        context?.let { it1 -> CommonUtils().shareQuote(it1, quoteDay.data.title) }
+                        context?.let { it1 -> CommonUtils().shareQuote(it1, quoteDay.data, "") }
                     })
                     recent_see_all.setOnClickListener(View.OnClickListener {
                         val intent = Intent(context, SingleCategory::class.java)

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.models.Quote
@@ -60,27 +61,18 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>,
             holder.itemView.author_quote_tags.visibility = View.GONE
         }
 
-        if (CommonUtils().checkFavoritePref(context, quote.id)) {
-            holder.itemView.action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
-            holder.itemView.action_favorite.setOnClickListener {
-                CommonUtils().unfavQuote(context, quote.id) {
-                    holder.itemView.action_favorite.setImageResource(R.drawable.ic_star_border_black_24dp)
-                }
-            }
-        } else {
-            holder.itemView.action_favorite.setOnClickListener {
-                CommonUtils().favQuote(context, quote, authorName) {
-                    holder.itemView.action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
-                }
+        holder.itemView.action_favorite.setOnClickListener {
+            CommonUtils().favQuote(context, quote, authorName) {
+                holder.itemView.action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
             }
         }
 
         holder.itemView.action_copy.setOnClickListener(View.OnClickListener {
-            CommonUtils().copyQuote(context, quote.title)
+            CommonUtils().copyQuote(context, quote, authorName)
         })
 
         holder.itemView.action_share.setOnClickListener(View.OnClickListener {
-            CommonUtils().shareQuote(context, quote.title)
+            CommonUtils().shareQuote(context, quote, authorName)
         })
     }
 

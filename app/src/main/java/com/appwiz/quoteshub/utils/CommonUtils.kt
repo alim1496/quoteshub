@@ -1,38 +1,34 @@
 package com.appwiz.quoteshub.utils
 
 import android.content.*
-import android.util.Log
 import android.widget.Toast
-import com.appwiz.quoteshub.activities.MainActivity
 import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.room.AppDB
-import com.appwiz.quoteshub.room.FavDao
 import com.appwiz.quoteshub.room.FavEntity
-import android.content.SharedPreferences
 import kotlinx.coroutines.*
+import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 
 class CommonUtils : CoroutineScope {
     private val job = Job()
-    private val PRIVATE_MODE = 0
-    private val prefName = "Favorites"
 
     override val coroutineContext: CoroutineContext
         get() = job
 
     fun favQuote(context: Context, quote: Quote, authorName: String, callback: () -> Unit) {
-        val nameFound = authorName != ""
-        val name: String
-        if (nameFound) name = authorName
-        else name = quote.source.name
+        val name = if (authorName != "") authorName
+        else quote.source.name
         val entity = FavEntity(quote.id, quote.title, name)
         val db = AppDB(context)
 
         launch {
             withContext(Dispatchers.IO) {
-                db.favDao().addFav(entity)
-                addFavoritePref(context, quote.id)
+                try {
+                    db.favDao().addFav(entity)
+                } catch (e:Exception) {
+                    return@withContext
+                }
             }
             callback()
         }
@@ -43,24 +39,33 @@ class CommonUtils : CoroutineScope {
 
         launch {
             withContext(Dispatchers.IO) {
-                db.favDao().removeFav(id)
-                addFavoritePref(context, id)
+                try {
+                    db.favDao().removeFav(id)
+                } catch (e:Exception) {
+                    return@withContext
+                }
             }
             callback()
         }
     }
 
-    fun copyQuote(context:Context, quote:String) {
+    private fun getContent(quote:Quote, authorName: String) : String {
+        val name = if (authorName != "") authorName
+        else quote.source.name
+        return "\"" + quote.title + "\"" + "\n" +  name
+    }
+
+    fun copyQuote(context:Context, quote:Quote, authorName: String) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?;
-        val clip = ClipData.newPlainText("label", quote)
+        val clip = ClipData.newPlainText("label", getContent(quote, authorName))
         clipboard!!.setPrimaryClip(clip)
         Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
-    fun shareQuote(context:Context, quote:String) {
+    fun shareQuote(context:Context, quote:Quote, authorName: String) {
         val intent = Intent()
         intent.action = Intent.ACTION_SEND
-        intent.putExtra(Intent.EXTRA_TEXT, quote)
+        intent.putExtra(Intent.EXTRA_TEXT, getContent(quote, authorName))
         intent.type = "text/plain"
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         val chooserIntent = Intent.createChooser(intent, "Share to:")
@@ -68,23 +73,4 @@ class CommonUtils : CoroutineScope {
         context.startActivity(chooserIntent)
     }
 
-    fun addFavoritePref(context: Context, id: Int) {
-        val sharedpreferences = context.getSharedPreferences(prefName, PRIVATE_MODE)
-        val editor = sharedpreferences.edit()
-        editor.putInt("Favorite${id}", id)
-        editor.apply()
-    }
-
-    fun removeFavoritePref(context: Context, id: Int) {
-        val sharedpreferences = context.getSharedPreferences(prefName, PRIVATE_MODE)
-        val editor = sharedpreferences.edit()
-        editor.remove("Favorite${id}")
-        editor.apply()
-    }
-
-    fun checkFavoritePref(context: Context, id: Int) : Boolean {
-        val sharedpreferences = context.getSharedPreferences(prefName, PRIVATE_MODE)
-        val fetchedID = sharedpreferences.getInt("Favorite${id}", 0)
-        return id == fetchedID
-    }
 }

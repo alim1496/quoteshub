@@ -31,11 +31,15 @@ class Personalize : AppCompatActivity() {
         }
 
         tv_tnc.setOnClickListener {
-            startActivity(Intent(this, Conditions::class.java))
+            val webIntent = Intent(this, Privacy::class.java)
+            webIntent.putExtra("url", Constants.termsUrl)
+            startActivity(webIntent)
         }
 
         tv_policy.setOnClickListener {
-            startActivity(Intent(this, Privacy::class.java))
+            val webIntent = Intent(this, Privacy::class.java)
+            webIntent.putExtra("url", Constants.policyUrl)
+            startActivity(webIntent)
         }
 
     }

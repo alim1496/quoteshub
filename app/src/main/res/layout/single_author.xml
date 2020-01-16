@@ -80,21 +80,12 @@
                                 android:layout_marginStart="10dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
-                            <TextView
-                                    android:id="@+id/followers_count"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="20dp"
-                                    android:gravity="center"
-                                    android:text="@string/common_zero"
-                                    android:textSize="16sp"
-                                    android:fontFamily="sans-serif-medium"
-                            />
-                            <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="20dp"
-                                    android:gravity="center"
-                                    android:text="@string/author_followers"
-                                    android:textSize="16sp"
+                            <ImageView
+                                    android:id="@+id/action_author_star"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/ic_star_border_black_24dp"
+                                    android:tint="@color/button_focused_color"
                             />
                         </LinearLayout>
                     </LinearLayout>

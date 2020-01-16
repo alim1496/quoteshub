@@ -131,7 +131,6 @@ class AuthorsFragment : Fragment() {
                     adapter = activity?.let { AuthorsAdapter(it, authors.results) { author: Author, position: Int ->
                         val intent = Intent(context, SingleAuthor::class.java)
                         intent.putExtra("authorID", author.id)
-                        intent.putExtra("authorQuotes", author.quotes)
                         intent.putExtra("authorname", author.name)
                         startActivity(intent)
                     } }

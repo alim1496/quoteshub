@@ -9,9 +9,7 @@ import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.FavAdapter
 import com.appwiz.quoteshub.room.AppDB
 import kotlinx.android.synthetic.main.favorite_quotes_list.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 
@@ -36,7 +34,9 @@ class Favorites : AppCompatActivity(), CoroutineScope {
         fav_recycler.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
 
         launch {
-            adapter.setFav(db.favDao().showAll())
+            withContext(Dispatchers.IO) {
+                adapter.setFav(db.favDao().showAll())
+            }
         }
 
     }

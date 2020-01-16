@@ -1,9 +1,11 @@
 package com.appwiz.quoteshub.activities
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +28,7 @@ class SingleAuthor : AppCompatActivity() {
     var pastVisiblesItems: Int = 0
     var pageRequested: Int = 1
     var name: String? = ""
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +37,6 @@ class SingleAuthor : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val id = intent.extras?.getInt("authorID")
-        val count = intent.extras?.getInt("authorQuotes")
         name = intent.extras?.getString("authorname")
 
         val layoutManager = LinearLayoutManager(this)
@@ -43,6 +45,25 @@ class SingleAuthor : AppCompatActivity() {
 
         title = name
         quotes_title.text = "Quotes By ${name}"
+
+        sharedPreferences = getSharedPreferences("Favorite Authors", 0)
+        val editor = sharedPreferences.edit()
+
+        if (sharedPreferences.getInt("FavAuthor$id", 0) != 0) {
+            action_author_star.setImageResource(R.drawable.ic_star_black_24dp)
+        }
+
+        action_author_star.setOnClickListener {
+            if (sharedPreferences.getInt("FavAuthor$id", 0) != 0) {
+                editor.remove("FavAuthor$id")
+                editor.apply()
+                action_author_star.setImageResource(R.drawable.ic_star_border_black_24dp)
+            } else {
+                id?.let { it1 -> editor.putInt("FavAuthor$id", it1) }
+                editor.apply()
+                action_author_star.setImageResource(R.drawable.ic_star_black_24dp)
+            }
+        }
 
         auth_quotes_recycle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
@@ -70,8 +91,8 @@ class SingleAuthor : AppCompatActivity() {
             }
         })
 
-        if (id != null && count != null) {
-            loadData(id, count, 1)
+        if (id != null) {
+            loadData(id, 1)
         }
     }
 
@@ -106,7 +127,7 @@ class SingleAuthor : AppCompatActivity() {
         })
     }
 
-    private fun loadData(id: Int, count: Int, page: Int) {
+    private fun loadData(id: Int, page: Int) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<AuthorDetails> = destinationServices.getAuthorDetails(id, page)
 
@@ -118,11 +139,13 @@ class SingleAuthor : AppCompatActivity() {
                     author_app_bar_layout.visibility = View.VISIBLE
                     author_linear_layout.visibility = View.VISIBLE
                     val authorDetails : AuthorDetails = response.body()!!
-                    quotes_count.text = count.toString()
+
                     Picasso.get().load(authorDetails.source.image).placeholder(R.drawable.avatar_placeholder).into(single_author_img)
                     author_desc.text = authorDetails.source.shortDesc
 
                     val authorQuotes = authorDetails.quotes
+
+                    quotes_count.text = authorDetails.quotes.count.toString()
                     adapter = name?.let { QuotesAdapter(applicationContext, authorQuotes.results, true, it) }
                     auth_quotes_recycle.adapter = adapter
 

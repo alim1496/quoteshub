@@ -25,5 +25,6 @@ data class AuthorDetails (
 )
 
 data class AuthorQuotes (
+    var count: Int,
     var results: List<Quote>
 )

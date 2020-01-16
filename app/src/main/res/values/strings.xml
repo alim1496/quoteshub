@@ -9,7 +9,7 @@
     <string name="see_all">See All</string>
 
     <!-- single author xml -->
-    <string name="author_followers">Followers</string>
+    <string name="author_fav">Favorite</string>
     <string name="author_quotes">Quotes</string>
 
     <!-- common actions icons -->
