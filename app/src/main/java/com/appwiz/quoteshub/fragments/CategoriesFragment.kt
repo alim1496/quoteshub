@@ -43,7 +43,7 @@ class CategoriesFragment : Fragment() {
 
         val layoutManager = FlexboxLayoutManager(context)
         layoutManager.flexDirection = FlexDirection.ROW
-        layoutManager.justifyContent = JustifyContent.SPACE_BETWEEN
+        layoutManager.justifyContent = JustifyContent.CENTER
         loadData(layoutManager)
         return inflater.inflate(R.layout.fragment_categories, container, false)
     }

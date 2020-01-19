@@ -36,6 +36,9 @@ class AlphabetAdapter(val context: FragmentActivity, var letters: Array<Char>, v
         if (rowIndex == position) {
             holder.itemView.setBackgroundColor(Color.parseColor("#48C77C"))
             holder.itemView.tv_letter_item.setTextColor(Color.parseColor("#ffffff"))
+        } else {
+            holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"))
+            holder.itemView.tv_letter_item.setTextColor(Color.parseColor("#00574B"))
         }
     }
 
