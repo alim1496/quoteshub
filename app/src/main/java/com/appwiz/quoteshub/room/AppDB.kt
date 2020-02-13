@@ -7,9 +7,10 @@ import androidx.room.RoomDatabase
 
 private const val DATABASE = "favorites"
 
-@Database(entities = [FavEntity::class], version = 1)
+@Database(entities = [FavEntity::class, CatEntity::class], version = 2)
 abstract class AppDB : RoomDatabase() {
     abstract fun favDao() : FavDao
+    abstract fun catDao() : CatDao
 
     companion object {
 
@@ -22,6 +23,7 @@ abstract class AppDB : RoomDatabase() {
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
             AppDB::class.java, DATABASE)
+            .fallbackToDestructiveMigration()
             .build()
 
     }

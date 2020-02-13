@@ -35,9 +35,9 @@ class AuthorsAdapter(val context: FragmentActivity, var authors: List<Author>, v
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(author: Author) {
-            val authName = itemView.findViewById<RecyclerView>(R.id.author_name) as TextView
-            val authImg = itemView.findViewById<RecyclerView>(R.id.author_img) as ImageView
-            val authCount = itemView.findViewById<RecyclerView>(R.id.author_quotes) as TextView
+            val authName = itemView.findViewById(R.id.author_name) as TextView
+            val authImg = itemView.findViewById(R.id.author_img) as ImageView
+            val authCount = itemView.findViewById(R.id.author_quotes) as TextView
 
             authName.text = author.name
             Picasso.get().load(author.image).placeholder(R.drawable.avatar_placeholder).into(authImg)

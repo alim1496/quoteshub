@@ -5,6 +5,7 @@ import android.widget.Toast
 import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.room.AppDB
 import com.appwiz.quoteshub.room.FavEntity
+import com.appwiz.quoteshub.utils.Constants.Companion.playstorePage
 import kotlinx.coroutines.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
@@ -52,7 +53,7 @@ class CommonUtils : CoroutineScope {
     private fun getContent(quote:Quote, authorName: String) : String {
         val name = if (authorName != "") authorName
         else quote.source.name
-        return "\"" + quote.title + "\"" + "\n" +  name
+        return "\"" + quote.title + "\"" + " - " +  name
     }
 
     fun copyQuote(context:Context, quote:Quote, authorName: String) {
@@ -65,7 +66,8 @@ class CommonUtils : CoroutineScope {
     fun shareQuote(context:Context, quote:Quote, authorName: String) {
         val intent = Intent()
         intent.action = Intent.ACTION_SEND
-        intent.putExtra(Intent.EXTRA_TEXT, getContent(quote, authorName))
+        val content = getContent(quote, authorName) + "\n" + playstorePage
+        intent.putExtra(Intent.EXTRA_TEXT, content)
         intent.type = "text/plain"
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         val chooserIntent = Intent.createChooser(intent, "Share to:")

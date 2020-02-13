@@ -3,12 +3,12 @@ package com.appwiz.quoteshub.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.adapters.HomeQuotesAdapter
@@ -22,154 +22,157 @@ import com.appwiz.quoteshub.adapters.TagsAdapter
 import com.appwiz.quoteshub.models.Author
 import com.appwiz.quoteshub.models.FeedModel
 import com.appwiz.quoteshub.models.Tag
-import com.appwiz.quoteshub.services.DestinationServices
-import com.appwiz.quoteshub.services.ServiceBuilder
+import com.appwiz.quoteshub.services.Injection
 import com.appwiz.quoteshub.utils.CommonUtils
+import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
+import com.appwiz.quoteshub.viewmodels.HomeQuotesVM
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.action_buttons_bar.*
-import kotlinx.android.synthetic.main.action_buttons_bar.view.*
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-import com.appwiz.quoteshub.models.Response as _response
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
 class HomeFragment : Fragment() {
-    var adapter : HomeQuotesAdapter? = null
-    var adapter2 : AuthorsAdapter? = null
-    var adapter3 : TagsAdapter? = null
-    var adapter4 : EventsAdapter? = null
+    lateinit var adapter: HomeQuotesAdapter
+    lateinit var adapter5: HomeQuotesAdapter
+    lateinit var adapter2 : AuthorsAdapter
+    lateinit var adapter3 : TagsAdapter
+    lateinit var adapter4 : EventsAdapter
+    lateinit var viewModel: HomeQuotesVM
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        val featuredManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        val authorsManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        val tagsManager = FlexboxLayoutManager(activity)
-        val eventsManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        tagsManager.flexDirection = FlexDirection.ROW
-        tagsManager.justifyContent = JustifyContent.FLEX_START
-
-        loadFeed(layoutManager, featuredManager, authorsManager, tagsManager, eventsManager)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    private fun loadFeed(layoutManager : LinearLayoutManager, featuredManager: LinearLayoutManager,
-                         authorsManager: LinearLayoutManager, tagsManager: FlexboxLayoutManager,
-                         eventsManager: LinearLayoutManager) {
-        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<FeedModel> = destinationServices.getFeed()
-        requestCall.enqueue(object: Callback<FeedModel> {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupViewModel()
+        setupUI()
+        viewModel.loadHomeData()
+    }
 
-            override fun onResponse(call: Call<FeedModel>, response: Response<FeedModel>) {
+    private fun setupUI() {
+        adapter = HomeQuotesAdapter(viewModel.quotes.value?.RecentQuotes?.data?: emptyList())
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = adapter
 
-                if (response.isSuccessful) {
-                    home_screen_loader.visibility = View.GONE
-                    home_screen_container.visibility = View.VISIBLE
+        adapter5 = HomeQuotesAdapter(viewModel.quotes.value?.FeaturedQuotes?.data?: emptyList())
+        featured_recyclerView.layoutManager = LinearLayoutManager(activity)
+        featured_recyclerView.adapter = adapter5
 
-                    val feedResponse: FeedModel = response.body()!!
-                    val recentQuotes = feedResponse.RecentQuotes
-                    recent_quotes_title.text = recentQuotes.title
-                    recyclerView.layoutManager = layoutManager
-                    adapter = HomeQuotesAdapter(activity, recentQuotes.data)
-                    recyclerView.adapter = adapter
-                    if (recentQuotes.data.isEmpty()) {
-                        recent_quotes_container.visibility = View.GONE
-                    }
+        adapter3 =
+            activity?.let {
+                TagsAdapter(it, viewModel.quotes.value?.DayQuote?.data?.tags?: emptyList()) { item: Tag, position: Int ->
+                    val intent = Intent(context, SingleTag::class.java)
+                    intent.putExtra("tagID", item.id)
+                    intent.putExtra("tagName", item.name)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                }
+            }!!
+        val tagsManager = FlexboxLayoutManager(activity)
+        day_tag_recycler.layoutManager = tagsManager
+        tagsManager.flexDirection = FlexDirection.ROW
+        tagsManager.justifyContent = JustifyContent.FLEX_START
+        day_tag_recycler.adapter = adapter3
 
-                    val featuredQuotes = feedResponse.FeaturedQuotes
-                    featured_quotes_title.text = featuredQuotes.title
-                    featured_recyclerView.layoutManager = featuredManager
-                    adapter = HomeQuotesAdapter(activity, featuredQuotes.data)
-                    featured_recyclerView.adapter = adapter
+        adapter2 =
+            activity?.let {
+                AuthorsAdapter(it, viewModel.quotes.value?.FeaturedAuthors?.data?: emptyList()) { author: Author, position: Int ->
+                    val intent = Intent(context, SingleAuthor::class.java)
+                    intent.putExtra("authorID", author.id)
+                    intent.putExtra("authorname", author.name)
+                    startActivity(intent)
+                }
+            }!!
+        authors_recyclerview.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+        authors_recyclerview.adapter = adapter2
 
-                    val featuredAuthors = feedResponse.FeaturedAuthors
-                    featured_authors_title.text = featuredAuthors.title
-                    authors_recyclerview.layoutManager = authorsManager
-                    adapter2 = activity?.let { AuthorsAdapter(it, featuredAuthors.data) { author: Author, position: Int ->
-                        val intent = Intent(context, SingleAuthor::class.java)
-                        intent.putExtra("authorID", author.id)
-                        intent.putExtra("authorname", author.name)
-                        startActivity(intent)
-                    } }
-                    authors_recyclerview.adapter = adapter2
+        adapter4 = EventsAdapter(viewModel.quotes.value?.EventsToday?.data?: emptyList())
+        events_recyclerview.layoutManager = LinearLayoutManager(activity)
+        events_recyclerview.adapter = adapter4
 
-                    val quoteDay = feedResponse.DayQuote
-                    quote_day_title.text = quoteDay.title
-                    day_quote_title.text = quoteDay.data.title
-                    day_quote_src.text = quoteDay.data.source.name
-                    day_tag_recycler.layoutManager = tagsManager
-                    adapter3 = activity?.let {
-                        TagsAdapter(it, quoteDay.data.tags) { item: Tag, position: Int ->
-                            val intent = Intent(context, SingleTag::class.java)
-                            intent.putExtra("tagID", item.id)
-                            intent.putExtra("tagName", item.name)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                        }
-                    }
-                    day_tag_recycler.adapter = adapter3
+        recent_see_all.setOnClickListener(View.OnClickListener {
+            val intent = Intent(context, SingleCategory::class.java)
+            intent.putExtra("catName", "Recent Quotes")
+            intent.putExtra("moreName", "recent=true")
+            startActivity(intent)
+        })
 
-                    val eventsDay = feedResponse.EventsToday
-                    today_events_title.text = eventsDay.title
-                    events_recyclerview.layoutManager = eventsManager
-                    adapter4 = EventsAdapter(context as FragmentActivity?, eventsDay.data)
-                    events_recyclerview.adapter = adapter4
-                    if (eventsDay.data.isEmpty()) {
-                        today_events_container.visibility = View.GONE
-                    }
+        featured_see_all.setOnClickListener(View.OnClickListener {
+            val intent = Intent(context, SingleCategory::class.java)
+            intent.putExtra("catName", "Featured Quotes")
+            intent.putExtra("moreName", "featured=true")
+            startActivity(intent)
+        })
+    }
 
-                    action_favorite.setOnClickListener {
-                        context?.let { it1 ->
-                            CommonUtils().favQuote(it1, quoteDay.data, "") {
-                                action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
-                            }
-                        }
-                    }
+    private fun setupViewModel() {
+        viewModel = ViewModelProviders.of(this, BaseViewModelFactory{HomeQuotesVM(Injection.getHomeQuotesRepo())}).get(HomeQuotesVM::class.java)
+        viewModel.quotes.observe(this, renderFeed)
+        viewModel.onMessageError.observe(this, renderError)
+        viewModel.isViewLoading.observe(this, renderLoader)
+    }
 
-                    action_copy.setOnClickListener(View.OnClickListener {
-                        context?.let { it1 -> CommonUtils().copyQuote(it1, quoteDay.data, "") }
-                    })
-                    action_share.setOnClickListener(View.OnClickListener {
-                        context?.let { it1 -> CommonUtils().shareQuote(it1, quoteDay.data, "") }
-                    })
-                    recent_see_all.setOnClickListener(View.OnClickListener {
-                        val intent = Intent(context, SingleCategory::class.java)
-                        intent.putExtra("catName", "Recent Quotes")
-                        intent.putExtra("moreName", "recent=true")
-                        startActivity(intent)
-                    })
-                    featured_see_all.setOnClickListener(View.OnClickListener {
-                        val intent = Intent(context, SingleCategory::class.java)
-                        intent.putExtra("catName", "Featured Quotes")
-                        intent.putExtra("moreName", "featured=true")
-                        startActivity(intent)
-                    })
+    private val renderFeed = Observer<FeedModel> {
+        home_screen_container.visibility = View.VISIBLE
+
+        recent_quotes_title.text = it.RecentQuotes.title
+        if (it.RecentQuotes.data.isEmpty()) {
+            recent_quotes_container.visibility = View.GONE
+        } else {
+            adapter.updateData(it.RecentQuotes.data)
+        }
+
+        featured_quotes_title.text = it.FeaturedQuotes.title
+        adapter5.updateData(it.FeaturedQuotes.data)
+
+        val dayQuote = it.DayQuote
+        quote_day_title.text = it.DayQuote.title
+        day_quote_title.text = it.DayQuote.data.title
+        day_quote_src.text = it.DayQuote.data.source.name
+        adapter3.updateData(it.DayQuote.data.tags)
+
+        featured_authors_title.text = it.FeaturedAuthors.title
+        adapter2.addItems(it.FeaturedAuthors.data)
+
+        today_events_title.text = it.EventsToday.title
+        if (it.EventsToday.data.isEmpty()) {
+            today_events_container.visibility = View.GONE
+        } else {
+            adapter4.updateData(it.EventsToday.data)
+        }
+
+        action_favorite.setOnClickListener {
+            context?.let { it1 ->
+                CommonUtils().favQuote(it1, dayQuote.data, "") {
+                    action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
                 }
             }
+        }
 
-            override fun onFailure(call: Call<FeedModel>, t: Throwable) {
-                home_screen_loader.visibility = View.GONE
-                net_err_holder.visibility = View.VISIBLE
-                try_again_btn.setOnClickListener(View.OnClickListener {
-                    home_screen_loader.visibility = View.VISIBLE
-                    net_err_holder.visibility = View.GONE
-                    loadFeed(layoutManager, featuredManager, authorsManager, tagsManager, eventsManager)
-                })
-            }
+        action_copy.setOnClickListener(View.OnClickListener {
+            context?.let { it1 -> CommonUtils().copyQuote(it1, dayQuote.data, "") }
+        })
+
+        action_share.setOnClickListener(View.OnClickListener {
+            context?.let { it1 -> CommonUtils().shareQuote(it1, dayQuote.data, "") }
+        })
+    }
+
+    private val renderLoader = Observer<Boolean> {
+        net_err_holder.visibility = View.GONE
+        val visible = if (it) View.VISIBLE else View.GONE
+        home_screen_loader.visibility = visible
+    }
+
+    private val renderError = Observer<Any> {
+        net_err_holder.visibility = View.VISIBLE
+        try_again_btn.setOnClickListener(View.OnClickListener {
+            home_screen_loader.visibility = View.VISIBLE
+            net_err_holder.visibility = View.GONE
+            viewModel.loadHomeData()
         })
     }
 

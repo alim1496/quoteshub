@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.models.Quote
 
-class HomeQuotesAdapter(val context: FragmentActivity?, val quotes:List<Quote>) : RecyclerView.Adapter<HomeQuotesAdapter.MyViewHolder>() {
+class HomeQuotesAdapter(var quotes:List<Quote>) : RecyclerView.Adapter<HomeQuotesAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.quote_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.quote_item, parent, false)
         return MyViewHolder(view)
     }
 
@@ -21,15 +21,17 @@ class HomeQuotesAdapter(val context: FragmentActivity?, val quotes:List<Quote>) 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val quote = quotes[position]
-        holder.setData(quote)
+        holder.quoteText.text = quote.title
+        holder.quoteSrc.text = quote.source.name
     }
 
-    inner class MyViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
-        fun setData(quote : Quote?) {
-            val quoteText = itemView.findViewById<RecyclerView>(R.id.quote_text) as TextView
-            val quoteSrc = itemView.findViewById<RecyclerView>(R.id.quote_src) as TextView
-            quoteText.text = quote?.title
-            quoteSrc.text = quote?.source?.name
-        }
+    fun updateData(data: List<Quote>) {
+        quotes = data
+        notifyDataSetChanged()
+    }
+
+    class MyViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+        val quoteText: TextView = itemView.findViewById(R.id.quote_text)
+        val quoteSrc: TextView = itemView.findViewById(R.id.quote_src)
     }
 }
