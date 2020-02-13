@@ -77,15 +77,13 @@ class HomeFragment : Fragment() {
         tagsManager.justifyContent = JustifyContent.FLEX_START
         day_tag_recycler.adapter = adapter3
 
-        adapter2 =
-            activity?.let {
-                AuthorsAdapter(it, viewModel.quotes.value?.FeaturedAuthors?.data?: emptyList()) { author: Author, position: Int ->
-                    val intent = Intent(context, SingleAuthor::class.java)
-                    intent.putExtra("authorID", author.id)
-                    intent.putExtra("authorname", author.name)
-                    startActivity(intent)
-                }
-            }!!
+        adapter2 = AuthorsAdapter(viewModel.quotes.value?.FeaturedAuthors?.data?: emptyList(), true) { author: Author, position: Int ->
+                        val intent = Intent(context, SingleAuthor::class.java)
+                        intent.putExtra("authorID", author.id)
+                        intent.putExtra("authorname", author.name)
+                        startActivity(intent)
+                    }
+
         authors_recyclerview.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         authors_recyclerview.adapter = adapter2
 

@@ -17,6 +17,7 @@ import com.appwiz.quoteshub.models.Author
 import com.appwiz.quoteshub.models.AuthorModel
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
+import com.appwiz.quoteshub.utils.AutoFitGLM
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
@@ -57,9 +58,7 @@ class AuthorsFragment : Fragment() {
         letterManager.flexDirection = FlexDirection.ROW
         letterManager.justifyContent = JustifyContent.CENTER
 
-        val layoutManager = FlexboxLayoutManager(activity)
-        layoutManager.flexDirection = FlexDirection.ROW
-        layoutManager.justifyContent = JustifyContent.FLEX_START
+        val layoutManager = activity?.let { AutoFitGLM(it, 200) }
 
         val letters = arrayOf('A','B','C','D','E','F','G','H','I','J','K','L','M',
             'N','O','P','Q','R','S','T','U','V','W','X','Y','Z')
@@ -70,7 +69,9 @@ class AuthorsFragment : Fragment() {
             authors_screen_loader.visibility = View.VISIBLE
             author_recyclerview.visibility = View.GONE
             tv_empty_author.visibility = View.GONE
-            loadData(layoutManager, pageRequested, letterSelected)
+            if (layoutManager != null) {
+                loadData(layoutManager, pageRequested, letterSelected)
+            }
         }}
 
         author_recyclerview?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -83,9 +84,11 @@ class AuthorsFragment : Fragment() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
-                    visibleItemCount = layoutManager.childCount
-                    totalItemCount = layoutManager.itemCount
-                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
+                    if (layoutManager != null) {
+                        visibleItemCount = layoutManager.childCount
+                        totalItemCount = layoutManager.itemCount
+                        pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
+                    }
                     if (scrolling) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
                             pageRequested += 1
@@ -96,7 +99,9 @@ class AuthorsFragment : Fragment() {
             }
         })
 
-        loadData(layoutManager, pageRequested, letterSelected)
+        if (layoutManager != null) {
+            loadData(layoutManager, pageRequested, letterSelected)
+        }
     }
 
     private fun loadMore(page: Int, letter: String) {
@@ -117,7 +122,7 @@ class AuthorsFragment : Fragment() {
         })
     }
 
-    private fun loadData(layoutManager: FlexboxLayoutManager, page: Int, letter: String) {
+    private fun loadData(layoutManager: AutoFitGLM, page: Int, letter: String) {
         val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
         val requestCall : Call<AuthorModel> = destinationServices.getAuthors(page, letter)
         requestCall.enqueue(object: Callback<AuthorModel> {
@@ -128,12 +133,12 @@ class AuthorsFragment : Fragment() {
                     author_recyclerview.visibility = View.VISIBLE
                     val authors : AuthorModel = response.body()!!
                     author_recyclerview.layoutManager = layoutManager
-                    adapter = activity?.let { AuthorsAdapter(it, authors.results) { author: Author, position: Int ->
+                    adapter = AuthorsAdapter(authors.results, false) { author: Author, position: Int ->
                         val intent = Intent(context, SingleAuthor::class.java)
                         intent.putExtra("authorID", author.id)
                         intent.putExtra("authorname", author.name)
                         startActivity(intent)
-                    } }
+                    }
                     author_recyclerview.adapter = adapter
                     if (authors.results.size == 0) {
                         tv_empty_author.visibility = View.VISIBLE
