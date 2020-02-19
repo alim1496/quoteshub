@@ -1,13 +1,15 @@
 package com.appwiz.quoteshub.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.appwiz.quoteshub.models.Category
 import com.appwiz.quoteshub.repositories.CategoriesRepo
-import com.appwiz.quoteshub.room.CatEntity
+import com.appwiz.quoteshub.room.entity.CatEntity
 import com.appwiz.quoteshub.services.OperationCallback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 class CategoriesVM(private val repository: CategoriesRepo) : ViewModel() {
@@ -24,12 +26,15 @@ class CategoriesVM(private val repository: CategoriesRepo) : ViewModel() {
                     val catEntities:MutableList<CatEntity> = ArrayList()
                     val apiCategories = obj as List<Category>
                     for (cat in apiCategories) {
-                        val catEntity = CatEntity(cat.id, cat.name, cat.quotes)
+                        val catEntity =
+                            CatEntity(cat.id, cat.name, cat.quotes)
                         catEntities.add(catEntity)
                     }
-                    thread(start = true) {
+
+                    CoroutineScope(IO).launch {
                         repository.addCatToDB(catEntities)
                     }
+
                 }
             }
 

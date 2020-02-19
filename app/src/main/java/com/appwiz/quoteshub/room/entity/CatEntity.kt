@@ -1,4 +1,4 @@
-package com.appwiz.quoteshub.room
+package com.appwiz.quoteshub.room.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

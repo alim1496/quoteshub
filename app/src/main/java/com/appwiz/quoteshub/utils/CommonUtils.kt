@@ -4,7 +4,7 @@ import android.content.*
 import android.widget.Toast
 import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.room.AppDB
-import com.appwiz.quoteshub.room.FavEntity
+import com.appwiz.quoteshub.room.entity.FavEntity
 import com.appwiz.quoteshub.utils.Constants.Companion.playstorePage
 import kotlinx.coroutines.*
 import java.lang.Exception

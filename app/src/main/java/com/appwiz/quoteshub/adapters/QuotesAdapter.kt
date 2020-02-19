@@ -48,7 +48,7 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>,
         if (showQuotes) {
             holder.itemView.author_quote_tags.apply {
                 layoutManager = tagsManager
-                adapter = TagsAdapter(context, quote.tags) { item: Tag, position: Int ->
+                adapter = TagsAdapter(quote.tags) { item: Tag, position: Int ->
                     val intent = Intent(context, SingleTag::class.java)
                     intent.putExtra("tagID", item.id)
                     intent.putExtra("tagName", item.name)

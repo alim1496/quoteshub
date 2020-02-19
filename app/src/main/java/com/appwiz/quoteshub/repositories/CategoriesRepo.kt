@@ -1,11 +1,9 @@
 package com.appwiz.quoteshub.repositories
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.appwiz.quoteshub.models.CategoryModel
-import com.appwiz.quoteshub.room.AppDB
-import com.appwiz.quoteshub.room.CatDao
-import com.appwiz.quoteshub.room.CatEntity
+import com.appwiz.quoteshub.room.dao.CatDao
+import com.appwiz.quoteshub.room.entity.CatEntity
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.OperationCallback
 import com.appwiz.quoteshub.services.ServiceBuilder
@@ -17,11 +15,8 @@ class CategoriesRepo(private val dao: CatDao) {
     val categories:LiveData<List<CatEntity>> = dao.showCats()
     private lateinit var requestCall: Call<CategoryModel>
 
-    fun addCatToDB(cats: List<CatEntity>) {
-        dao.deleteCats()
-        for (cat in cats) {
-            dao.addCat(cat)
-        }
+    suspend fun addCatToDB(cats: List<CatEntity>) {
+        dao.addCats(cats)
     }
 
     fun retrieveCategories(callback: OperationCallback) {

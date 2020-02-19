@@ -8,9 +8,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.models.Event
+import com.appwiz.quoteshub.room.entity.EventEntity
 
 
-class EventsAdapter(var events:List<Event>) : RecyclerView.Adapter<EventsAdapter.MyViewHolder>() {
+class EventsAdapter(var events:List<EventEntity>) : RecyclerView.Adapter<EventsAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventsAdapter.MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.event_item, parent, false)
         return MyViewHolder(view)
@@ -25,7 +26,7 @@ class EventsAdapter(var events:List<Event>) : RecyclerView.Adapter<EventsAdapter
         holder.eventText.text = event.text
     }
 
-    fun updateData(data: List<Event>) {
+    fun updateData(data: List<EventEntity>) {
         events = data
         notifyDataSetChanged()
     }

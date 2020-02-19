@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
-import com.appwiz.quoteshub.room.CatEntity
+import com.appwiz.quoteshub.room.entity.CatEntity
 
 class CategoriesAdapter(var results: List<CatEntity>, val clickListener: (CatEntity, Int) -> Unit)
     : RecyclerView.Adapter<CategoriesAdapter.MyViewHolder>() {

@@ -12,7 +12,8 @@ data class SingleFeedQuote (
     var type: String,
     var title: String,
     var layout: String,
-    var data: List<Quote>
+    var data: List<Quote>,
+    var more: Boolean
 )
 
 data class SingleQuote (

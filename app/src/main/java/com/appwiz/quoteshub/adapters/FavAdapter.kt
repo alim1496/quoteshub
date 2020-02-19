@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
-import com.appwiz.quoteshub.room.FavEntity
+import com.appwiz.quoteshub.room.entity.FavEntity
 
 class FavAdapter(val context: Context) : RecyclerView.Adapter<FavAdapter.MyViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)

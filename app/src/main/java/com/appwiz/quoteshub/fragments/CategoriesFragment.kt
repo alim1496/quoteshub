@@ -12,16 +12,14 @@ import androidx.lifecycle.ViewModelProviders
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.activities.SingleCategory
 import com.appwiz.quoteshub.adapters.CategoriesAdapter
-import com.appwiz.quoteshub.models.Category
 import com.appwiz.quoteshub.room.AppDB
-import com.appwiz.quoteshub.room.CatEntity
+import com.appwiz.quoteshub.room.entity.CatEntity
 import com.appwiz.quoteshub.services.Injection
 import com.appwiz.quoteshub.utils.AutoFitGLM
 import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
 import com.appwiz.quoteshub.viewmodels.CategoriesVM
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_categories.*
-import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class CategoriesFragment : Fragment() {
