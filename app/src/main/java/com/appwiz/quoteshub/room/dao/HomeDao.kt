@@ -36,6 +36,9 @@ interface HomeDao {
     @Query("select * from DayQuoteEntity")
     fun showDayQuote():LiveData<DayQuoteEntity>
 
+    @Query("delete from DayQuoteEntity")
+    suspend fun removeDayQuote()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addEvent(eventEntity: List<EventEntity>)
 

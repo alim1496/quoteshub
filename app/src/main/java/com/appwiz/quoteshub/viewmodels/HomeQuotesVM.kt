@@ -20,9 +20,6 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
     val dayQuote:LiveData<DayQuoteEntity> = repository.dayQuote
     val titlesHome:LiveData<List<TitleEntity>> = repository.homeTitles
 
-//    private val _titles = MutableLiveData<Map<String, String>>()
-//    val titles : LiveData<Map<String, String>> = _titles
-
     private val _quotes = MutableLiveData<FeedModel>()
     val quotes: LiveData<FeedModel> = _quotes
 
@@ -44,7 +41,7 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
                     val _featureds:MutableList<HomeEntity> = ArrayList()
                     val _recents:MutableList<HomeEntity> = ArrayList()
                     val _authors:MutableList<AuthorEntity> = ArrayList()
-                    val _dayTags:MutableList<Tag> = ArrayList()
+                    val _dayTags:ArrayList<Tag> = ArrayList()
                     val _events:MutableList<EventEntity> = ArrayList()
 
                     val featureds = feedModel.FeaturedQuotes.data
@@ -63,15 +60,8 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
                     val events = feedModel.EventsToday.data
                     val eventBlock = TitleEntity(5, "event", feedModel.EventsToday.title)
 
-//                    val entryTitles:MutableMap<String, String> = mutableMapOf()
-//                    entryTitles.put("recent", feedModel.RecentQuotes.title)
-//                    entryTitles.put("featured", feedModel.FeaturedQuotes.title)
-//                    entryTitles.put("day", feedModel.DayQuote.title)
-//                    entryTitles.put("author", feedModel.FeaturedAuthors.title)
-//                    entryTitles.put("event", feedModel.EventsToday.title)
-//                    _titles.postValue(entryTitles)
 
-                    var fcount:Int = 5
+                    var fcount = 5
                     for (featured in featureds) {
                         fcount += 1
                         val entity = HomeEntity(
@@ -83,7 +73,7 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
                         _featureds.add(entity)
                     }
 
-                    var rcount:Int = 0
+                    var rcount = 0
                     for (recent in recents) {
                         rcount += 1
                         val entity = HomeEntity(
@@ -110,9 +100,10 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
                         _dayTags.add(entity)
                     }
                     val dayEntity = DayQuoteEntity(
-                        1,
+                        day.id,
                         day.title,
-                        day.source.name
+                        day.source.name,
+                        _dayTags
                     )
 
                     for (event in events) {

@@ -38,6 +38,7 @@ class HomeQuotesRepo(private val dao: HomeDao) {
     }
 
     suspend fun addDayToDB(dayQuoteEntity: DayQuoteEntity) {
+        dao.removeDayQuote()
         dao.addDayQuote(dayQuoteEntity)
     }
 

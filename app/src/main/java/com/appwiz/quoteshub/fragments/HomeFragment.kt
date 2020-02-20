@@ -17,15 +17,19 @@ import com.appwiz.quoteshub.activities.SingleCategory
 import com.appwiz.quoteshub.activities.SingleTag
 import com.appwiz.quoteshub.adapters.*
 import com.appwiz.quoteshub.models.Author
+import com.appwiz.quoteshub.models.Quote
+import com.appwiz.quoteshub.models.Source
 import com.appwiz.quoteshub.models.Tag
 import com.appwiz.quoteshub.room.AppDB
 import com.appwiz.quoteshub.room.entity.*
 import com.appwiz.quoteshub.services.Injection
+import com.appwiz.quoteshub.utils.CommonUtils
 import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
 import com.appwiz.quoteshub.viewmodels.HomeQuotesVM
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import kotlinx.android.synthetic.main.action_buttons_bar.*
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.lang.Exception
@@ -135,8 +139,30 @@ class HomeFragment : Fragment() {
 
     private val renderdayQuote = Observer<DayQuoteEntity> {
         try {
+            val data = Quote(it.id, it.text, Source(0, ""), false, 0, ArrayList())
+            val author = it.author
             day_quote_title.text = it.text
             day_quote_src.text = it.author
+            val tagModels:MutableList<Tag> = ArrayList()
+            for (entity in it.tags) {
+                val _tag = Tag(entity.id, entity.name)
+                tagModels.add(_tag)
+            }
+            adapter3.updateData(tagModels)
+            action_favorite.setOnClickListener {
+                context?.let { it1 ->
+                    CommonUtils().favQuote(it1, data, author) {
+                        action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
+                    }
+                }
+            }
+            action_copy.setOnClickListener(View.OnClickListener {
+                context?.let { it1 -> CommonUtils().copyQuote(it1, data, author) }
+            })
+
+            action_share.setOnClickListener(View.OnClickListener {
+                context?.let { it1 -> CommonUtils().shareQuote(it1, data, author) }
+            })
         } catch (e:Exception) {
             e.stackTrace
         }
@@ -160,18 +186,6 @@ class HomeFragment : Fragment() {
 //            adapter.updateData(it.RecentQuotes.data)
 //        }
 //
-//        featured_quotes_title.text = it.FeaturedQuotes.title
-//        adapter5.updateData(it.FeaturedQuotes.data)
-//
-//        val dayQuote = it.DayQuote
-//        quote_day_title.text = it.DayQuote.title
-//        day_quote_title.text = it.DayQuote.data.title
-//        day_quote_src.text = it.DayQuote.data.source.name
-//        adapter3.updateData(it.DayQuote.data.tags)
-//
-//        featured_authors_title.text = it.FeaturedAuthors.title
-//        adapter2.addItems(it.FeaturedAuthors.data)
-//
 //        today_events_title.text = it.EventsToday.title
 //        if (it.EventsToday.data.isEmpty()) {
 //            today_events_container.visibility = View.GONE
@@ -179,21 +193,6 @@ class HomeFragment : Fragment() {
 //            adapter4.updateData(it.EventsToday.data)
 //        }
 //
-//        action_favorite.setOnClickListener {
-//            context?.let { it1 ->
-//                CommonUtils().favQuote(it1, dayQuote.data, "") {
-//                    action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
-//                }
-//            }
-//        }
-//
-//        action_copy.setOnClickListener(View.OnClickListener {
-//            context?.let { it1 -> CommonUtils().copyQuote(it1, dayQuote.data, "") }
-//        })
-//
-//        action_share.setOnClickListener(View.OnClickListener {
-//            context?.let { it1 -> CommonUtils().shareQuote(it1, dayQuote.data, "") }
-//        })
 //    }
 
     private val renderLoader = Observer<Boolean> {
