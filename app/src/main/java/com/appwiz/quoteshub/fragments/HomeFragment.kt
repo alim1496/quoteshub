@@ -54,6 +54,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUI() {
+        shimmer_recent_quote.startShimmer()
+        shimmer_featured_quote.startShimmer()
+        shimmer_day_quote.startShimmer()
+        shimmer_featured_author.startShimmer()
+        shimmer_events_today.startShimmer()
+
         adapter = HomeQuotesAdapter(viewModel.recentQuotes.value?: emptyList())
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = adapter
@@ -115,7 +121,8 @@ class HomeFragment : Fragment() {
         viewModel.featuredAuthors.observe(this, renderAuthors)
         viewModel.eventsToday.observe(this, renderEvents)
         viewModel.onMessageError.observe(this, renderError)
-        viewModel.isViewLoading.observe(this, renderLoader)
+        viewModel.emptyEvent.observe(this, renderEmptyEvent)
+        viewModel.emptyFeatured.observe(this, renderEmptyFeatured)
     }
 
     private val renderTitles = Observer<List<TitleEntity>> {
@@ -129,16 +136,24 @@ class HomeFragment : Fragment() {
     }
 
     private val renderRecent = Observer<List<HomeEntity>> {
-        home_screen_container.visibility = View.VISIBLE
+        shimmer_recent_quote.stopShimmer()
+        shimmer_recent_quote.visibility = View.GONE
+        recent_quotes_container.visibility = View.VISIBLE
         adapter.updateData(it)
     }
 
     private val renderFeatured = Observer<List<HomeEntity>> {
+        shimmer_featured_quote.stopShimmer()
+        shimmer_featured_quote.visibility = View.GONE
+        featured_quotes_container.visibility = View.VISIBLE
         adapter5.updateData(it)
     }
 
     private val renderdayQuote = Observer<DayQuoteEntity> {
         try {
+            shimmer_day_quote.stopShimmer()
+            shimmer_day_quote.visibility = View.GONE
+            day_quote_container.visibility = View.VISIBLE
             val data = Quote(it.id, it.text, Source(0, ""), false, 0, ArrayList())
             val author = it.author
             day_quote_title.text = it.text
@@ -169,45 +184,37 @@ class HomeFragment : Fragment() {
     }
 
     private val renderAuthors = Observer<List<AuthorEntity>> {
+        shimmer_featured_author.stopShimmer()
+        shimmer_featured_author.visibility = View.GONE
+        featured_authors_container.visibility = View.VISIBLE
         adapter2.addData(it)
     }
 
     private val renderEvents = Observer<List<EventEntity>> {
+        shimmer_events_today.stopShimmer()
+        shimmer_events_today.visibility = View.GONE
+        today_events_container.visibility = View.VISIBLE
         adapter4.updateData(it)
-    }
-
-//    private val renderFeed = Observer<FeedModel> {
-//        home_screen_container.visibility = View.VISIBLE
-//
-//        recent_quotes_title.text = it.RecentQuotes.title
-//        if (it.RecentQuotes.data.isEmpty()) {
-//            recent_quotes_container.visibility = View.GONE
-//        } else {
-//            adapter.updateData(it.RecentQuotes.data)
-//        }
-//
-//        today_events_title.text = it.EventsToday.title
-//        if (it.EventsToday.data.isEmpty()) {
-//            today_events_container.visibility = View.GONE
-//        } else {
-//            adapter4.updateData(it.EventsToday.data)
-//        }
-//
-//    }
-
-    private val renderLoader = Observer<Boolean> {
-        net_err_holder.visibility = View.GONE
-        val visible = if (it) View.VISIBLE else View.GONE
-        home_screen_loader.visibility = visible
     }
 
     private val renderError = Observer<Any> {
         net_err_holder.visibility = View.VISIBLE
         try_again_btn.setOnClickListener(View.OnClickListener {
-            home_screen_loader.visibility = View.VISIBLE
             net_err_holder.visibility = View.GONE
             viewModel.loadHomeData()
         })
+    }
+
+    private val renderEmptyEvent = Observer<Boolean> {
+        var visible = View.GONE
+        if (!it) visible = View.VISIBLE
+        today_events_container.visibility = visible
+    }
+
+    private val renderEmptyFeatured = Observer<Boolean> {
+        var visible = View.GONE
+        if (!it) visible = View.VISIBLE
+        featured_quotes_container.visibility = visible
     }
 
 }

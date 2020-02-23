@@ -1,5 +1,6 @@
 package com.appwiz.quoteshub.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.appwiz.quoteshub.room.entity.*
 import com.appwiz.quoteshub.services.OperationCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
@@ -23,18 +25,19 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
     private val _quotes = MutableLiveData<FeedModel>()
     val quotes: LiveData<FeedModel> = _quotes
 
-    private val _isViewLoading = MutableLiveData<Boolean>()
-    val isViewLoading:LiveData<Boolean> = _isViewLoading
-
     private val _onMessageError = MutableLiveData<Any>()
     val onMessageError:LiveData<Any> = _onMessageError
 
+    private val _emptyEvent = MutableLiveData<Boolean>()
+    val emptyEvent:LiveData<Boolean> = _emptyEvent
+
+    private val _emptyFeatured = MutableLiveData<Boolean>()
+    val emptyFeatured:LiveData<Boolean> = _emptyFeatured
+
     fun loadHomeData() {
-        _isViewLoading.postValue(true)
         repository.retrieveHomeQuotes(object : OperationCallback {
 
             override fun onSuccess(obj: Any?) {
-                _isViewLoading.postValue(false)
                 if (obj != null) {
                     val feedModel = obj as FeedModel
 
@@ -61,18 +64,22 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
                     val eventBlock = TitleEntity(5, "event", feedModel.EventsToday.title)
 
 
-                    var fcount = 5
-                    for (featured in featureds) {
-                        fcount += 1
-                        val entity = HomeEntity(
-                            fcount,
-                            featured.title,
-                            featured.source.name,
-                            1
-                        )
-                        _featureds.add(entity)
+                    if (featureds.isEmpty()) {
+                        _emptyFeatured.postValue(true)
+                    } else {
+                        _emptyFeatured.postValue(false)
+                        var fcount = 5
+                        for (featured in featureds) {
+                            fcount += 1
+                            val entity = HomeEntity(
+                                fcount,
+                                featured.title,
+                                featured.source.name,
+                                1
+                            )
+                            _featureds.add(entity)
+                        }
                     }
-
                     var rcount = 0
                     for (recent in recents) {
                         rcount += 1
@@ -106,9 +113,14 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
                         _dayTags
                     )
 
-                    for (event in events) {
-                        val entity = EventEntity(event.id, event.text)
-                        _events.add(entity)
+                    if (events.isEmpty()) {
+                        _emptyEvent.postValue(true)
+                    } else {
+                        _emptyEvent.postValue(false)
+                        for (event in events) {
+                            val entity = EventEntity(event.id, event.text)
+                            _events.add(entity)
+                        }
                     }
 
                     CoroutineScope(IO).launch {
@@ -127,10 +139,13 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
             }
 
             override fun onError(obj: Any?) {
-                _isViewLoading.postValue(false)
-                _onMessageError.postValue(obj)
+                MainScope().launch {
+                    val home = repository.checkEmptyHomeQuote(1)
+                    if (home == 0) {
+                        _onMessageError.postValue(obj)
+                    }
+                }
             }
-
         })
     }
 }

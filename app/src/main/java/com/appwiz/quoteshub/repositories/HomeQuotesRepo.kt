@@ -24,6 +24,10 @@ class HomeQuotesRepo(private val dao: HomeDao) {
         dao.addHome(homeQuotes)
     }
 
+    suspend fun checkEmptyHomeQuote(type:Int): Int {
+        return dao.checkEmptyHome(type)
+    }
+
     suspend fun addHomeTitles(titleEntity: TitleEntity) {
         dao.addTitle(titleEntity)
     }

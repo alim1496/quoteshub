@@ -15,4 +15,7 @@ interface CatDao {
     @Query("select * from CatEntity")
     fun showCats(): LiveData<List<CatEntity>>
 
+    @Query("select count(*) from CatEntity")
+    suspend fun checkEmptyCategories(): Int
+
 }

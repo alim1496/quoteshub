@@ -9,6 +9,7 @@ import com.appwiz.quoteshub.room.entity.CatEntity
 import com.appwiz.quoteshub.services.OperationCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
@@ -39,8 +40,11 @@ class CategoriesVM(private val repository: CategoriesRepo) : ViewModel() {
             }
 
             override fun onError(obj: Any?) {
-                if (categories.value.isNullOrEmpty()) {
-                    _onMessageError.postValue(obj)
+                MainScope().launch {
+                    val size = repository.checkEmpty()
+                    if (size == 0) {
+                        _onMessageError.postValue(obj)
+                    }
                 }
             }
 

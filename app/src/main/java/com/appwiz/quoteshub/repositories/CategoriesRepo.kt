@@ -19,6 +19,10 @@ class CategoriesRepo(private val dao: CatDao) {
         dao.addCats(cats)
     }
 
+    suspend fun checkEmpty(): Int {
+        return dao.checkEmptyCategories()
+    }
+
     fun retrieveCategories(callback: OperationCallback) {
         requestCall = ServiceBuilder.buildService(DestinationServices::class.java).getCategories()
         requestCall.enqueue(object : Callback<CategoryModel> {

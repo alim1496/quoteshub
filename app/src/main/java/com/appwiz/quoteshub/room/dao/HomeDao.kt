@@ -15,6 +15,9 @@ interface HomeDao {
     @Query("select * from HomeEntity where type = :type")
     fun showHome(type:Int):LiveData<List<HomeEntity>>
 
+    @Query("select count(*) from HomeEntity where type = :type")
+    suspend fun checkEmptyHome(type: Int) : Int
+
     @Query("delete from HomeEntity where type = :type")
     suspend fun removeHome(type:Int)
 
@@ -41,6 +44,9 @@ interface HomeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addEvent(eventEntity: List<EventEntity>)
+
+    @Query("select count(*) from EventEntity")
+    suspend fun checkEmptyEvent() : Int
 
     @Query("select * from EventEntity")
     fun showEvent():LiveData<List<EventEntity>>
