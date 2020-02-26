@@ -38,6 +38,7 @@ class CategoriesFragment : Fragment() {
     }
 
     private fun setupUI() {
+        categories_screen_loader.startShimmer()
         adapter = CategoriesAdapter(viewModel.categories.value?: emptyList()) { item : CatEntity, position: Int ->
             val intent = Intent(context, SingleCategory::class.java)
             intent.putExtra("catID", item.id)
@@ -66,11 +67,11 @@ class CategoriesFragment : Fragment() {
     private val renderError = Observer<Any> {
         categories_screen_loader.visibility = View.GONE
         cat_net_err.visibility = View.VISIBLE
-        try_again_btn.setOnClickListener(View.OnClickListener {
+        try_again_btn.setOnClickListener {
             categories_screen_loader.visibility = View.VISIBLE
             cat_net_err.visibility = View.GONE
             viewModel.fetchFromApi()
-        })
+        }
     }
 
 }
