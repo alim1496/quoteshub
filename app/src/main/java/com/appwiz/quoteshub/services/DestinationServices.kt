@@ -34,7 +34,8 @@ interface DestinationServices {
 
     @GET("quotes/v1/tags/{id}/details/")
     fun getTagQuotes(
-        @Path("id") id: Int
+        @Path("id") id: Int,
+        @Query("page") page: Int
     ): Call<Response>
 
     @GET("quotes/v1/quotes/more/")

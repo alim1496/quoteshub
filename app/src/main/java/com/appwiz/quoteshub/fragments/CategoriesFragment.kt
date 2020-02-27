@@ -60,6 +60,7 @@ class CategoriesFragment : Fragment() {
 
     private val renderCategories = Observer<List<CatEntity>> {
         cat_recyclerview.visibility = View.VISIBLE
+        categories_screen_loader.stopShimmer()
         categories_screen_loader.visibility = View.GONE
         adapter.updateData(it)
     }

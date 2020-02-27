@@ -39,6 +39,7 @@ class SingleCategory : AppCompatActivity() {
         val more: String? = intent.extras?.getString("moreName")
         title = name
 
+        single_category_loader.startShimmer()
         single_cat_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -133,6 +134,7 @@ class SingleCategory : AppCompatActivity() {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
 
                 if (response.isSuccessful) {
+                    single_category_loader.stopShimmer()
                     single_category_loader.visibility = View.GONE
                     single_cat_recycler.visibility = View.VISIBLE
                     val quoteList : Response = response.body()!!

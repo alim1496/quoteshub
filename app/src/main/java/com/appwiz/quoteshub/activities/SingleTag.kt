@@ -1,23 +1,31 @@
 package com.appwiz.quoteshub.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.AbsListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.QuotesAdapter
-import com.appwiz.quoteshub.models.Response
-import com.appwiz.quoteshub.services.DestinationServices
-import com.appwiz.quoteshub.services.ServiceBuilder
+import com.appwiz.quoteshub.models.Quote
+import com.appwiz.quoteshub.services.Injection
+import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
+import com.appwiz.quoteshub.viewmodels.SingleTagVM
 import kotlinx.android.synthetic.main.single_tag.*
-import retrofit2.Call
-import retrofit2.Callback
+
 
 class SingleTag : AppCompatActivity() {
-    var adapter: QuotesAdapter? = null
+    lateinit var adapter: QuotesAdapter
+    lateinit var viewModel: SingleTagVM
+    var scrolling: Boolean = false
+    var visibleItemCount: Int = 0
+    var totalItemCount: Int = 0
+    var pastVisiblesItems: Int = 0
+    var pageRequested: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,16 +33,38 @@ class SingleTag : AppCompatActivity() {
         setSupportActionBar(tag_tool_bar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = RecyclerView.VERTICAL
-
         val id: Int? = intent.extras?.getInt("tagID")
         val name: String? = intent.extras?.getString("tagName")
         title = name
 
-        if (id != null) {
-            loadData(layoutManager, id)
-        }
+        val layoutManager = LinearLayoutManager(this)
+
+        setupViewmodel()
+        setupUI(layoutManager)
+        if (id != null) viewModel.fetchFromApi(id, pageRequested)
+
+        single_tag_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    scrolling = true
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    visibleItemCount = layoutManager.childCount
+                    totalItemCount = layoutManager.itemCount
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
+                    if (scrolling && id != null) {
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            pageRequested += 1
+                            viewModel.fetchFromApi(id, pageRequested)
+                        }
+                    }
+                }
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -47,26 +77,22 @@ class SingleTag : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadData(layoutManager: LinearLayoutManager, id: Int) {
-        val destinationServices : DestinationServices = ServiceBuilder.buildService(DestinationServices::class.java)
-        val requestCall : Call<Response> = destinationServices.getTagQuotes(id)
-        requestCall.enqueue(object: Callback<Response> {
+    private fun setupUI(layoutManager: LinearLayoutManager) {
+        single_tag_loader.startShimmer()
+        single_tag_recycler.layoutManager = layoutManager
+        adapter = QuotesAdapter(applicationContext, viewModel.tagQuotes.value?: emptyList(), false)
+        single_tag_recycler.adapter = adapter
+    }
 
-            override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
+    private fun setupViewmodel() {
+        viewModel = ViewModelProviders.of(this, BaseViewModelFactory{SingleTagVM(Injection.getSingleTagRepo())}).get(SingleTagVM::class.java)
+        viewModel.tagQuotes.observe(this, renderTagQuotes)
+    }
 
-                if (response.isSuccessful) {
-                    single_tag_loader.visibility = View.GONE
-                    single_tag_recycler.visibility = View.VISIBLE
-                    val quoteList : Response = response.body()!!
-                    single_tag_recycler.layoutManager = layoutManager
-                    adapter = QuotesAdapter(applicationContext, quoteList.results, false)
-                    single_tag_recycler.adapter = adapter
-                }
-            }
-
-            override fun onFailure(call: Call<Response>, t: Throwable) {
-                Log.e("alim", "oh ho")
-            }
-        })
+    private val renderTagQuotes = Observer<List<Quote>> {
+        single_tag_loader.stopShimmer()
+        single_tag_loader.visibility = View.GONE
+        single_tag_recycler.visibility = View.VISIBLE
+        adapter.addItems(it)
     }
 }

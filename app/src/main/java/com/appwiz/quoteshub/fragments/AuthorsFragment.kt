@@ -28,15 +28,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
 class AuthorsFragment : Fragment() {
     var adapter: AuthorsAdapter? = null
     var scrolling: Boolean = false
@@ -67,6 +58,7 @@ class AuthorsFragment : Fragment() {
             pageRequested = 1
             letterSelected = letter
             authors_screen_loader.visibility = View.VISIBLE
+            authors_screen_loader.startShimmer()
             author_recyclerview.visibility = View.GONE
             tv_empty_author.visibility = View.GONE
             if (layoutManager != null) {
@@ -129,6 +121,7 @@ class AuthorsFragment : Fragment() {
 
             override fun onResponse(call: Call<AuthorModel>, response: Response<AuthorModel>) {
                 if (response.isSuccessful) {
+                    authors_screen_loader.stopShimmer()
                     authors_screen_loader.visibility = View.GONE
                     author_recyclerview.visibility = View.VISIBLE
                     val authors : AuthorModel = response.body()!!
@@ -149,11 +142,11 @@ class AuthorsFragment : Fragment() {
             override fun onFailure(call: Call<AuthorModel>, t: Throwable) {
                 authors_screen_loader.visibility = View.GONE
                 auth_net_err.visibility = View.VISIBLE
-                try_again_btn.setOnClickListener(View.OnClickListener {
+                try_again_btn.setOnClickListener {
                     authors_screen_loader.visibility = View.VISIBLE
                     auth_net_err.visibility = View.GONE
                     loadData(layoutManager, pageRequested, letterSelected)
-                })
+                }
             }
         })
     }

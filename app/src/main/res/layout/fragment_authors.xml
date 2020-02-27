@@ -29,13 +29,14 @@
 
     </LinearLayout>
 
-    <ProgressBar
-            android:id="@+id/authors_screen_loader"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/custom_progress_bar"/>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:id="@+id/authors_screen_loader">
+        <include layout="@layout/shimmer_authors"/>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <LinearLayout
             android:visibility="gone"
