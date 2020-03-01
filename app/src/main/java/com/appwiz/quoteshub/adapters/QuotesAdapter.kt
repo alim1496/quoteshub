@@ -63,7 +63,7 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>,
 
         holder.itemView.action_favorite.setOnClickListener {
             CommonUtils().favQuote(context, quote, authorName) {
-                holder.itemView.action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
+                holder.itemView.action_favorite.setImageResource(R.drawable.ic_star)
             }
         }
 

@@ -24,9 +24,6 @@
         <activity android:name="com.appwiz.quoteshub.activities.SingleCategory"/>
         <activity android:name="com.appwiz.quoteshub.activities.SingleAuthor"/>
         <activity android:name="com.appwiz.quoteshub.activities.SingleTag"/>
-        <activity android:name="com.appwiz.quoteshub.activities.Personalize"/>
-        <activity android:name="com.appwiz.quoteshub.activities.Privacy"/>
-        <activity android:name="com.appwiz.quoteshub.activities.Favorites"/>
     </application>
 
 </manifest>

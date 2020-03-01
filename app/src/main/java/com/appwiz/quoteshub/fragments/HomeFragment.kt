@@ -122,7 +122,6 @@ class HomeFragment : Fragment() {
         viewModel.eventsToday.observe(this, renderEvents)
         viewModel.onMessageError.observe(this, renderError)
         viewModel.emptyEvent.observe(this, renderEmptyEvent)
-        viewModel.emptyFeatured.observe(this, renderEmptyFeatured)
     }
 
     private val renderTitles = Observer<List<TitleEntity>> {
@@ -167,7 +166,7 @@ class HomeFragment : Fragment() {
             action_favorite.setOnClickListener {
                 context?.let { it1 ->
                     CommonUtils().favQuote(it1, data, author) {
-                        action_favorite.setImageResource(R.drawable.ic_star_black_24dp)
+                        action_favorite.setImageResource(R.drawable.ic_star)
                     }
                 }
             }
@@ -209,12 +208,6 @@ class HomeFragment : Fragment() {
         var visible = View.GONE
         if (!it) visible = View.VISIBLE
         today_events_container.visibility = visible
-    }
-
-    private val renderEmptyFeatured = Observer<Boolean> {
-        var visible = View.GONE
-        if (!it) visible = View.VISIBLE
-        featured_quotes_container.visibility = visible
     }
 
 }

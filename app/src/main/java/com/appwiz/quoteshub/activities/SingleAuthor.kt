@@ -50,18 +50,18 @@ class SingleAuthor : AppCompatActivity() {
         val editor = sharedPreferences.edit()
 
         if (sharedPreferences.getInt("FavAuthor$id", 0) != 0) {
-            action_author_star.setImageResource(R.drawable.ic_star_black_24dp)
+            action_author_star.setImageResource(R.drawable.ic_star)
         }
 
         action_author_star.setOnClickListener {
             if (sharedPreferences.getInt("FavAuthor$id", 0) != 0) {
                 editor.remove("FavAuthor$id")
                 editor.apply()
-                action_author_star.setImageResource(R.drawable.ic_star_border_black_24dp)
+                action_author_star.setImageResource(R.drawable.ic_star_unfilled)
             } else {
                 id?.let { it1 -> editor.putInt("FavAuthor$id", it1) }
                 editor.apply()
-                action_author_star.setImageResource(R.drawable.ic_star_black_24dp)
+                action_author_star.setImageResource(R.drawable.ic_star)
             }
         }
 

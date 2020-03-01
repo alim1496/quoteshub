@@ -31,9 +31,6 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
     private val _emptyEvent = MutableLiveData<Boolean>()
     val emptyEvent:LiveData<Boolean> = _emptyEvent
 
-    private val _emptyFeatured = MutableLiveData<Boolean>()
-    val emptyFeatured:LiveData<Boolean> = _emptyFeatured
-
     fun loadHomeData() {
         repository.retrieveHomeQuotes(object : OperationCallback {
 
@@ -64,22 +61,18 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
                     val eventBlock = TitleEntity(5, "event", feedModel.EventsToday.title)
 
 
-                    if (featureds.isEmpty()) {
-                        _emptyFeatured.postValue(true)
-                    } else {
-                        _emptyFeatured.postValue(false)
-                        var fcount = 5
-                        for (featured in featureds) {
-                            fcount += 1
-                            val entity = HomeEntity(
-                                fcount,
-                                featured.title,
-                                featured.source.name,
-                                1
-                            )
-                            _featureds.add(entity)
-                        }
+                    var fcount = 5
+                    for (featured in featureds) {
+                        fcount += 1
+                        val entity = HomeEntity(
+                            fcount,
+                            featured.title,
+                            featured.source.name,
+                            1
+                        )
+                        _featureds.add(entity)
                     }
+
                     var rcount = 0
                     for (recent in recents) {
                         rcount += 1
@@ -91,6 +84,7 @@ class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
                         )
                         _recents.add(entity)
                     }
+
 
                     for (author in authors) {
                         val entity = AuthorEntity(

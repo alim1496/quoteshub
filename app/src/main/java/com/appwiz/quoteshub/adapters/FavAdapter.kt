@@ -27,8 +27,8 @@ class FavAdapter(val context: Context) : RecyclerView.Adapter<FavAdapter.MyViewH
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val favText = itemView.findViewById<RecyclerView>(R.id.quote_text) as TextView
-            val favSrc = itemView.findViewById<RecyclerView>(R.id.quote_src) as TextView
+            val favText = itemView.findViewById(R.id.quote_text) as TextView
+            val favSrc = itemView.findViewById(R.id.quote_src) as TextView
     }
 
     internal fun setFav(favs: List<FavEntity>) {
