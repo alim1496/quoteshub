@@ -29,7 +29,7 @@ import com.appwiz.quoteshub.viewmodels.HomeQuotesVM
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import kotlinx.android.synthetic.main.action_buttons_bar.*
+import kotlinx.android.synthetic.main.action_buttons.*
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.lang.Exception
@@ -165,9 +165,8 @@ class HomeFragment : Fragment() {
             adapter3.updateData(tagModels)
             action_favorite.setOnClickListener {
                 context?.let { it1 ->
-                    CommonUtils().favQuote(it1, data, author) {
-                        action_favorite.setImageResource(R.drawable.ic_star)
-                    }
+                    CommonUtils().favQuote(it1, data, author)
+                    action_favorite.setImageResource(R.drawable.ic_star)
                 }
             }
             action_copy.setOnClickListener(View.OnClickListener {

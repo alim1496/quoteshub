@@ -13,7 +13,7 @@ import com.appwiz.quoteshub.models.Quote
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import kotlinx.android.synthetic.main.action_buttons_bar.view.*
+import kotlinx.android.synthetic.main.action_buttons.view.*
 import kotlinx.android.synthetic.main.author_quote_item.view.*
 import com.appwiz.quoteshub.activities.SingleTag
 import com.appwiz.quoteshub.models.Tag
@@ -62,9 +62,8 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>,
         }
 
         holder.itemView.action_favorite.setOnClickListener {
-            CommonUtils().favQuote(context, quote, authorName) {
-                holder.itemView.action_favorite.setImageResource(R.drawable.ic_star)
-            }
+            CommonUtils().favQuote(context, quote, authorName)
+            holder.itemView.action_favorite.setImageResource(R.drawable.ic_star)
         }
 
         holder.itemView.action_copy.setOnClickListener(View.OnClickListener {

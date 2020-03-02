@@ -27,6 +27,7 @@ class CategoriesFragment : Fragment() {
     lateinit var viewModel: CategoriesVM
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        activity?.title = "Categories"
         return inflater.inflate(R.layout.fragment_categories, container, false)
     }
 

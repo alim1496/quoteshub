@@ -17,7 +17,7 @@ class CommonUtils : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = job
 
-    fun favQuote(context: Context, quote: Quote, authorName: String, callback: () -> Unit) {
+    fun favQuote(context: Context, quote: Quote, authorName: String) {
         val name = if (authorName != "") authorName
         else quote.source.name
         val entity = FavEntity(quote.id, quote.title, name)
@@ -31,7 +31,6 @@ class CommonUtils : CoroutineScope {
                     return@withContext
                 }
             }
-            callback()
         }
     }
 

@@ -19,11 +19,19 @@ import com.appwiz.quoteshub.fragments.HomeFragment
 import com.appwiz.quoteshub.fragments.Privacy
 import com.appwiz.quoteshub.utils.Constants
 import com.google.android.material.navigation.NavigationView
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Color.parseColor
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
-
+    private lateinit var sideNav: NavigationView
 
     private val onSideNavClickListener = NavigationView.OnNavigationItemSelectedListener {
         val bundle = Bundle()
@@ -86,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val sideNav: NavigationView = findViewById(R.id.side_navigation)
+        sideNav = findViewById(R.id.side_navigation)
         drawerLayout = findViewById(R.id.main_drawer)
 
         val toggle = ActionBarDrawerToggle(
