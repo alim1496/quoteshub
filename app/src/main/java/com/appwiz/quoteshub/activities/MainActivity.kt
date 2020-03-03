@@ -3,9 +3,7 @@ package com.appwiz.quoteshub.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.ActionBarDrawerToggle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -16,16 +14,8 @@ import com.appwiz.quoteshub.fragments.AuthorsFragment
 import com.appwiz.quoteshub.fragments.CategoriesFragment
 import com.appwiz.quoteshub.fragments.Favorites
 import com.appwiz.quoteshub.fragments.HomeFragment
-import com.appwiz.quoteshub.fragments.Privacy
 import com.appwiz.quoteshub.utils.Constants
 import com.google.android.material.navigation.NavigationView
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.Color.parseColor
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
 
 
 
@@ -34,8 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sideNav: NavigationView
 
     private val onSideNavClickListener = NavigationView.OnNavigationItemSelectedListener {
-        val bundle = Bundle()
-        val fragment = Privacy()
+        val intent = Intent(this, Privacy::class.java)
         when (it.itemId) {
             R.id.navigation_home -> {
                 replaceFragment(HomeFragment())
@@ -58,23 +47,21 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.drawer_fb -> {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(Constants.fbPage)
-                startActivity(intent)
+                val webIntent = Intent(Intent.ACTION_VIEW)
+                webIntent.data = Uri.parse(Constants.fbPage)
+                startActivity(webIntent)
                 closeDrawer()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.drawer_tnc -> {
-                bundle.putString("url", Constants.termsUrl)
-                fragment.arguments = bundle
-                replaceFragment(fragment)
+                intent.putExtra("url", Constants.termsUrl)
+                startActivity(intent)
                 closeDrawer()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.drawer_policy -> {
-                bundle.putString("url", Constants.policyUrl)
-                fragment.arguments = bundle
-                replaceFragment(fragment)
+                intent.putExtra("url", Constants.policyUrl)
+                startActivity(intent)
                 closeDrawer()
                 return@OnNavigationItemSelectedListener true
             }

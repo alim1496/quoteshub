@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.activities.SingleAuthor
@@ -42,6 +43,12 @@ class AuthorsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_authors, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val title: TextView = activity!!.findViewById(R.id.app_tool_bar_title)
+        title.text = "Authors"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

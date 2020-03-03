@@ -32,7 +32,7 @@ class SingleAuthor : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.appwiz.quoteshub.R.layout.single_author)
+        setContentView(R.layout.single_author)
         setSupportActionBar(collapseToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

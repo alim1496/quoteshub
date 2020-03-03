@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.appwiz.quoteshub.R
@@ -19,6 +21,7 @@ import com.appwiz.quoteshub.utils.AutoFitGLM
 import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
 import com.appwiz.quoteshub.viewmodels.CategoriesVM
 import kotlinx.android.synthetic.main.common_error_container.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_categories.*
 
 
@@ -27,7 +30,6 @@ class CategoriesFragment : Fragment() {
     lateinit var viewModel: CategoriesVM
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        activity?.title = "Categories"
         return inflater.inflate(R.layout.fragment_categories, container, false)
     }
 
@@ -36,6 +38,12 @@ class CategoriesFragment : Fragment() {
         setupViewModel()
         setupUI()
         viewModel.fetchFromApi()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val title: TextView = activity!!.findViewById(R.id.app_tool_bar_title)
+        title.text = "Categories"
     }
 
     private fun setupUI() {

@@ -31,5 +31,7 @@
             android:id="@+id/side_navigation"
             android:fitsSystemWindows="true"
             android:layout_gravity="start"
-            app:menu="@menu/drawer_menu"/>
+            app:menu="@menu/drawer_menu"
+            app:itemTextColor="@color/textColorPrimary"
+            app:itemIconTint="@color/colorPrimary"/>
 </androidx.drawerlayout.widget.DrawerLayout>

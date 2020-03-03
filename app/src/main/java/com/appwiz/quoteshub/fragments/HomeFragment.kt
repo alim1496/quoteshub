@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,6 +52,12 @@ class HomeFragment : Fragment() {
         setupViewModel()
         setupUI()
         viewModel.loadHomeData()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val title: TextView = activity!!.findViewById(R.id.app_tool_bar_title)
+        title.text = "QuotesHub"
     }
 
     private fun setupUI() {

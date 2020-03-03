@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.appwiz.quoteshub.R
 import kotlinx.android.synthetic.main.favorite_quotes_list.*
@@ -30,6 +31,12 @@ class Favorites: Fragment(), CoroutineScope {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.favorite_quotes_list, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val title: TextView = activity!!.findViewById(R.id.app_tool_bar_title)
+        title.text = "Favorites"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
