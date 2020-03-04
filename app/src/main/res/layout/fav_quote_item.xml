@@ -10,14 +10,14 @@
             android:id="@+id/fav_quote_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/roboto_regular"
             android:textSize="16sp" />
 
     <TextView
             android:id="@+id/fav_quote_src"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
+            android:fontFamily="@font/roboto_light"
             android:textSize="14sp"/>
 
 </LinearLayout>

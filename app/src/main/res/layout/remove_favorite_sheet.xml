@@ -10,6 +10,7 @@
 
     <TextView
             android:id="@+id/tv_rmv_quote"
+            android:fontFamily="@font/roboto_medium"
             android:textSize="24sp"
             android:drawablePadding="20dp"
             android:drawableStart="@drawable/ic_delete"

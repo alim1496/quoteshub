@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/roboto_black"
             android:text="@string/err_msg"
             android:textSize="20sp"
     />
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/error_action_bg"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/roboto_black"
             android:paddingStart="10dp"
             android:paddingTop="5dp"
             android:paddingEnd="10dp"

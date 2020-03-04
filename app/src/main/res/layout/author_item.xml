@@ -18,6 +18,7 @@
             android:layout_height="140dp"
             android:orientation="vertical"
             android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
     >
         <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="70dp"
@@ -36,12 +37,14 @@
                 android:scrollHorizontally="true"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
+                android:fontFamily="@font/roboto_regular"
         />
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/author_quotes"
                 android:layout_marginBottom="5dp"
+                android:fontFamily="@font/roboto_regular"
         />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
