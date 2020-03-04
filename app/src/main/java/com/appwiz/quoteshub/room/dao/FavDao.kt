@@ -1,5 +1,6 @@
 package com.appwiz.quoteshub.room.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -12,8 +13,11 @@ interface FavDao {
     suspend fun addFav(fav: FavEntity)
 
     @Query("select * from FavEntity order by id desc")
-    fun showAll() : List<FavEntity>
+    fun showAll() : LiveData<List<FavEntity>>
 
     @Query("delete from FavEntity where id = :id")
     suspend fun removeFav(id:Int)
+
+    @Query("select count(*) from FavEntity")
+    suspend fun checkEmpty(): Int
 }

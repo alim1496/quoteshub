@@ -34,21 +34,6 @@ class CommonUtils : CoroutineScope {
         }
     }
 
-    fun unfavQuote(context: Context, id: Int, callback: () -> Unit) {
-        val db = AppDB(context)
-
-        launch {
-            withContext(Dispatchers.IO) {
-                try {
-                    db.favDao().removeFav(id)
-                } catch (e:Exception) {
-                    return@withContext
-                }
-            }
-            callback()
-        }
-    }
-
     private fun getContent(quote:Quote, authorName: String) : String {
         val name = if (authorName != "") authorName
         else quote.source.name

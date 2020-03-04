@@ -11,19 +11,24 @@ import com.appwiz.quoteshub.R
 import kotlinx.android.synthetic.main.favorite_quotes_list.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.adapters.FavAdapter
 import com.appwiz.quoteshub.room.AppDB
+import com.appwiz.quoteshub.room.entity.FavEntity
+import com.appwiz.quoteshub.services.Injection
+import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
+import com.appwiz.quoteshub.viewmodels.FavoritesVM
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 
-class Favorites: Fragment(), CoroutineScope {
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = job
+class Favorites: Fragment() {
+    lateinit var adapter: FavAdapter
+    lateinit var viewModel: FavoritesVM
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,18 +46,37 @@ class Favorites: Fragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val db = context?.let { AppDB(it) }
+        setupVM()
+        setupUI()
+    }
 
-        val adapter = context?.let { FavAdapter(it) }
+    private fun setupUI() {
+        adapter = FavAdapter(viewModel.favorites.value?: emptyList()) { fav:FavEntity ->
+            val removeQuote = RemoveQuote(fav.id, viewModel)
+            fragmentManager?.let { removeQuote.show(it, removeQuote.tag) }
+        }
         fav_recycler.adapter = adapter
         fav_recycler.layoutManager = LinearLayoutManager(context)
+        fav_recycler.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+    }
 
-        launch {
-            withContext(Dispatchers.IO) {
-                if (adapter != null && db != null) {
-                    adapter.setFav(db.favDao().showAll())
-                }
-            }
+    private fun setupVM() {
+        val db = context?.let { AppDB(it) }
+        if (db != null) {
+            viewModel = ViewModelProviders.of(this, BaseViewModelFactory{FavoritesVM(Injection.getFavoritesRepo(db.favDao()))}).get(FavoritesVM::class.java)
         }
+        viewModel.favorites.observe(this, renderQuotes)
+        viewModel.empty.observe(this, renderEmpty)
+        viewModel.checkEmptyData()
+    }
+
+    private val renderQuotes = Observer<List<FavEntity>> {
+        adapter.setFav(it)
+    }
+
+    private val renderEmpty = Observer<Boolean> {
+        var visible = View.GONE
+        if (it) visible = View.VISIBLE
+        tv_empty_fav_quote.visibility = visible
     }
 }

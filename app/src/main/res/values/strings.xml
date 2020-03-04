@@ -27,4 +27,6 @@
     <string name="find_fb_page">Facebook Page</string>
     <string name="terms_condition">Terms and Conditions</string>
     <string name="privacy_policy">Privacy Policy</string>
+
+    <string name="remove_fav">Remove from favorites</string>
 </resources>

@@ -35,9 +35,9 @@ class AlphabetAdapter(val context: FragmentActivity, var letters: Array<Char>, v
 
         if (rowIndex == position) {
             holder.itemView.setBackgroundColor(Color.parseColor("#48C77C"))
-            holder.itemView.tv_letter_item.setTextColor(Color.parseColor("#ffffff"))
+            holder.itemView.tv_letter_item.setTextColor(Color.parseColor("#f2f2f2"))
         } else {
-            holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"))
+            holder.itemView.setBackgroundColor(Color.parseColor("#f2f2f2"))
             holder.itemView.tv_letter_item.setTextColor(Color.parseColor("#00574B"))
         }
     }
@@ -45,7 +45,7 @@ class AlphabetAdapter(val context: FragmentActivity, var letters: Array<Char>, v
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun setData(letter:String) {
-            val letterName = itemView.findViewById<RecyclerView>(R.id.tv_letter_item) as TextView
+            val letterName = itemView.findViewById(R.id.tv_letter_item) as TextView
             letterName.text = letter
         }
     }

@@ -9,30 +9,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.room.entity.FavEntity
 
-class FavAdapter(val context: Context) : RecyclerView.Adapter<FavAdapter.MyViewHolder>() {
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var quotes = emptyList<FavEntity>()
+class FavAdapter(var quotes: List<FavEntity>, val listener: (FavEntity) -> Unit) : RecyclerView.Adapter<FavAdapter.MyViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavAdapter.MyViewHolder {
-        val view = inflater.inflate(R.layout.quote_item, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.fav_quote_item, parent, false)
         return MyViewHolder(view)
     }
 
     override fun getItemCount() = quotes.size
 
-    override fun onBindViewHolder(holder: FavAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val fav = quotes[position]
         holder.favText.text = fav.text
         holder.favSrc.text = fav.src
+        holder.itemView.setOnClickListener {
+            listener(fav)
+            notifyDataSetChanged()
+        }
     }
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val favText = itemView.findViewById(R.id.quote_text) as TextView
-            val favSrc = itemView.findViewById(R.id.quote_src) as TextView
+    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val favText = itemView.findViewById(R.id.fav_quote_text) as TextView
+        val favSrc = itemView.findViewById(R.id.fav_quote_src) as TextView
     }
 
     internal fun setFav(favs: List<FavEntity>) {
-        this.quotes = favs
+        quotes = favs
         notifyDataSetChanged()
     }
 }
