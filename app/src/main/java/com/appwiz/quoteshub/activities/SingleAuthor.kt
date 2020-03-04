@@ -7,11 +7,14 @@ import android.view.View
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.QuotesAdapter
+import com.appwiz.quoteshub.fragments.QuoteActions
 import com.appwiz.quoteshub.models.AuthorDetails
+import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
 import com.squareup.picasso.Picasso
@@ -146,8 +149,12 @@ class SingleAuthor : AppCompatActivity() {
                     val authorQuotes = authorDetails.quotes
 
                     quotes_count.text = authorDetails.quotes.count.toString()
-                    adapter = name?.let { QuotesAdapter(applicationContext, authorQuotes.results, true, it) }
+                    adapter = QuotesAdapter(applicationContext, authorQuotes.results, true) {quote: Quote ->
+                        val quoteActions = name?.let { QuoteActions(quote, it) }
+                        quoteActions?.show(supportFragmentManager, quoteActions?.tag)
+                    }
                     auth_quotes_recycle.adapter = adapter
+                    auth_quotes_recycle.addItemDecoration(DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL))
 
                     if (authorQuotes.results.isEmpty()) {
                         tv_empty_author_quote.visibility = View.VISIBLE

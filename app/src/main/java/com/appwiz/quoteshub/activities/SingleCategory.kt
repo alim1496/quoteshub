@@ -6,10 +6,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AbsListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.QuotesAdapter
+import com.appwiz.quoteshub.fragments.QuoteActions
+import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.models.Response
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
@@ -140,8 +143,12 @@ class SingleCategory : AppCompatActivity() {
                     single_cat_recycler.visibility = View.VISIBLE
                     val quoteList : Response = response.body()!!
                     single_cat_recycler.layoutManager = layoutManager
-                    adapter = QuotesAdapter(applicationContext, quoteList.results)
+                    adapter = QuotesAdapter(applicationContext, quoteList.results, true) {quote:Quote ->
+                        val quoteActions = QuoteActions(quote, "")
+                        quoteActions.show(supportFragmentManager, quoteActions.tag)
+                    }
                     single_cat_recycler.adapter = adapter
+                    single_cat_recycler.addItemDecoration(DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL))
                 }
             }
 

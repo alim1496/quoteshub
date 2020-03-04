@@ -21,14 +21,14 @@ import com.appwiz.quoteshub.utils.CommonUtils
 
 
 class QuotesAdapter(val context: Context, var quotes: List<Quote>,
-                    val showQuotes: Boolean = true, val authorName: String = "")
+                    val showQuotes: Boolean = true, val listener: (Quote) -> Unit)
     : RecyclerView.Adapter<QuotesAdapter.MyViewHolder>() {
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): QuotesAdapter.MyViewHolder {
+    ): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.author_quote_item, parent, false)
         return MyViewHolder(view)
     }
@@ -37,7 +37,7 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>,
         return quotes.size
     }
 
-    override fun onBindViewHolder(holder: QuotesAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val quote = quotes[position]
         holder.setData(quote)
 
@@ -61,18 +61,10 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>,
             holder.itemView.author_quote_tags.visibility = View.GONE
         }
 
-        holder.itemView.action_favorite.setOnClickListener {
-            CommonUtils().favQuote(context, quote, authorName)
-            holder.itemView.action_favorite.setImageResource(R.drawable.ic_star)
+        holder.itemView.setOnClickListener {
+            listener(quote)
         }
 
-        holder.itemView.action_copy.setOnClickListener(View.OnClickListener {
-            CommonUtils().copyQuote(context, quote, authorName)
-        })
-
-        holder.itemView.action_share.setOnClickListener(View.OnClickListener {
-            CommonUtils().shareQuote(context, quote, authorName)
-        })
     }
 
     fun addItems(newQuotes: List<Quote>) {
@@ -82,8 +74,8 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>,
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(quote : Quote?) {
-            val quoteText = itemView.findViewById<RecyclerView>(R.id.auth_quote_text) as TextView
-            val quoteSrc = itemView.findViewById<RecyclerView>(R.id.auth_quote_src_full) as TextView
+            val quoteText = itemView.findViewById(R.id.auth_quote_text) as TextView
+            val quoteSrc = itemView.findViewById(R.id.auth_quote_src_full) as TextView
             quoteText.text = quote?.title
             if (quote?.source == null) {
                 quoteSrc.visibility = View.GONE

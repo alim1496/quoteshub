@@ -7,10 +7,12 @@ import android.widget.AbsListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.QuotesAdapter
+import com.appwiz.quoteshub.fragments.QuoteActions
 import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.services.Injection
 import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
@@ -80,8 +82,12 @@ class SingleTag : AppCompatActivity() {
     private fun setupUI(layoutManager: LinearLayoutManager) {
         single_tag_loader.startShimmer()
         single_tag_recycler.layoutManager = layoutManager
-        adapter = QuotesAdapter(applicationContext, viewModel.tagQuotes.value?: emptyList(), false)
+        adapter = QuotesAdapter(applicationContext, viewModel.tagQuotes.value?: emptyList(), false) {quote:Quote->
+            val quoteActions = QuoteActions(quote, "")
+            quoteActions.show(supportFragmentManager, quoteActions.tag)
+        }
         single_tag_recycler.adapter = adapter
+        single_tag_recycler.addItemDecoration(DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL))
     }
 
     private fun setupViewmodel() {
