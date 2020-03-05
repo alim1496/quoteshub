@@ -18,7 +18,7 @@
     <string name="share_button">Share</string>
 
     <!-- -->
-    <string name="err_msg">Network Error Occured</string>
+    <string name="err_msg">Network Error Occurred</string>
     <string name="try_again">Try Again</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -32,4 +32,6 @@
     <string name="add_fav">Add to favorites</string>
     <string name="copy_quote">Copy to clipboard</string>
     <string name="share_quote">Share to social media</string>
+
+    <string name="empty_quote">No Quote Found</string>
 </resources>

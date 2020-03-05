@@ -35,8 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:fontFamily="@font/roboto_black"
-                android:text="No Quote Found"
+                android:fontFamily="@font/roboto_bold"
+                android:text="@string/empty_quote"
                 />
 
     </LinearLayout>
