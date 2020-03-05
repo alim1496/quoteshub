@@ -30,6 +30,11 @@ class AuthorsAdapter(var authors: List<Author>, val isShort:Boolean, val clcikLi
         holder.setData(author)
     }
 
+    fun emptyAdapter() {
+        authors = emptyList()
+        notifyDataSetChanged()
+    }
+
     fun addItems(newAuthors: List<Author>) {
         authors += newAuthors
         notifyDataSetChanged()

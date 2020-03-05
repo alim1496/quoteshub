@@ -15,7 +15,4 @@
     <include layout="@layout/shimmer_home_author_single" />
     <include layout="@layout/shimmer_home_author_single" />
     <include layout="@layout/shimmer_home_author_single" />
-    <include layout="@layout/shimmer_home_author_single" />
-    <include layout="@layout/shimmer_home_author_single" />
-    <include layout="@layout/shimmer_home_author_single" />
 </com.google.android.flexbox.FlexboxLayout>
