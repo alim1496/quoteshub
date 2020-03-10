@@ -87,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, 0, 0)
 
+        toggle.drawerArrowDrawable.color = resources.getColor(R.color.textColorSecondary)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         sideNav.setNavigationItemSelectedListener(onSideNavClickListener)

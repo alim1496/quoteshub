@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="textColorPrimary">#464344</color>
     <color name="shimmerColor">#A2878787</color>
+    <color name="textColorSecondary">#FFFFFF</color>
 </resources>

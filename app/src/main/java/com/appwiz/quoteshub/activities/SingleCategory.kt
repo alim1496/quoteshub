@@ -76,7 +76,6 @@ class SingleCategory : AppCompatActivity() {
         if (id != null && id != 0) {
             fetchData(layoutManager, id, 1)
         } else if (more != null) {
-            Log.e("more", "$more")
             fetchHomeData(layoutManager, more, 1)
         }
     }

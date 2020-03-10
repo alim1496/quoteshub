@@ -21,6 +21,13 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.single_author.*
 import retrofit2.Call
 import retrofit2.Callback
+import android.graphics.PorterDuff
+import androidx.core.content.ContextCompat
+import android.graphics.drawable.Drawable
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import androidx.core.content.res.ResourcesCompat
 
 
 class SingleAuthor : AppCompatActivity() {
