@@ -8,83 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:445483288265:android:7fd160cc9a097568",
-        "android_client_info": {
-          "package_name": "app.alim.quoteshub"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "445483288265-nnnier8rseio2b5ri5dia6jrqjudr06f.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "app.alim.quoteshub",
-            "certificate_hash": "c9bdde9800830e22c54a38aea60db0856f4800ba"
-          }
-        },
-        {
-          "client_id": "445483288265-4qrob9mure51ebjb47vur3il313hba3q.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC_tuNXM_NdxH0yJqqGcX2eeNy2u9-MbaM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "445483288265-4qrob9mure51ebjb47vur3il313hba3q.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:445483288265:android:4a65aea79e36b0cc",
+        "mobilesdk_app_id": "1:445483288265:android:56c80c6779b685a3dfaf18",
         "android_client_info": {
           "package_name": "com.appwiz.quoteshub"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "445483288265-mrngt016j79q1uuj36qogmbav813bj3t.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.appwiz.quoteshub",
-            "certificate_hash": "ee937e12afdf36fe19963bbcdac9b33ca7c88410"
-          }
-        },
-        {
-          "client_id": "445483288265-4qrob9mure51ebjb47vur3il313hba3q.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC_tuNXM_NdxH0yJqqGcX2eeNy2u9-MbaM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "445483288265-4qrob9mure51ebjb47vur3il313hba3q.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:445483288265:android:a1caab117ba6e1a0",
-        "android_client_info": {
-          "package_name": "com.quotesworld"
         }
       },
       "oauth_client": [

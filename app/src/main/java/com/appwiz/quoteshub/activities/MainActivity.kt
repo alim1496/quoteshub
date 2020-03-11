@@ -16,6 +16,11 @@ import com.appwiz.quoteshub.fragments.Favorites
 import com.appwiz.quoteshub.fragments.HomeFragment
 import com.appwiz.quoteshub.utils.Constants
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.iid.InstanceIdResult
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.iid.FirebaseInstanceId
+import android.util.Log
+
 
 
 
@@ -92,8 +97,13 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         sideNav.setNavigationItemSelectedListener(onSideNavClickListener)
 
-        replaceFragment(HomeFragment())
+//        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this,
+//            OnSuccessListener<InstanceIdResult> { instanceIdResult ->
+//                val newToken = instanceIdResult.token
+//                Log.e("newToken", newToken)
+//            })
 
+        replaceFragment(HomeFragment())
 
     }
 

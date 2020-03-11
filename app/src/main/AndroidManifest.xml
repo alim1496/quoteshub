@@ -11,6 +11,14 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <service
+                android:name="com.appwiz.quoteshub.firebase.MyFirebaseMessagingService"
+                android:exported="false"
+                android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
                 android:name="com.appwiz.quoteshub.activities.MainActivity"
                 android:windowSoftInputMode="adjustPan"
