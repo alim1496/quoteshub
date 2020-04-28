@@ -7,10 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.activities.SingleCategory
 import com.appwiz.quoteshub.adapters.CategoriesAdapter
@@ -20,17 +25,23 @@ import com.appwiz.quoteshub.services.Injection
 import com.appwiz.quoteshub.utils.AutoFitGLM
 import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
 import com.appwiz.quoteshub.viewmodels.CategoriesVM
-import kotlinx.android.synthetic.main.common_error_container.*
-import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.fragment_categories.*
 
 
 class CategoriesFragment : Fragment() {
     lateinit var adapter : CategoriesAdapter
     lateinit var viewModel: CategoriesVM
+    lateinit var progressBar: ProgressBar
+    lateinit var categories: RecyclerView
+    lateinit var errorLayout: LinearLayout
+    lateinit var tryBtn: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_categories, container, false)
+        val view = inflater.inflate(R.layout.fragment_categories, container, false)
+        progressBar = view.findViewById(R.id.progress)
+        categories = view.findViewById(R.id.cat_recyclerview)
+        errorLayout = view.findViewById(R.id.cat_net_err)
+        tryBtn = view.findViewById(R.id.try_again_btn)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,22 +51,16 @@ class CategoriesFragment : Fragment() {
         viewModel.fetchFromApi()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val title: TextView = activity!!.findViewById(R.id.app_tool_bar_title)
-        title.text = "Categories"
-    }
-
     private fun setupUI() {
-        categories_screen_loader.startShimmer()
         adapter = CategoriesAdapter(viewModel.categories.value?: emptyList()) { item : CatEntity, position: Int ->
             val intent = Intent(context, SingleCategory::class.java)
             intent.putExtra("catID", item.id)
             intent.putExtra("catName", item.name)
             startActivity(intent)
         }
-        cat_recyclerview.layoutManager = activity?.let { AutoFitGLM(it, 250) }
-        cat_recyclerview.adapter = adapter
+        categories.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        categories.adapter = adapter
+        categories.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
     }
 
     private fun setupViewModel() {
@@ -68,18 +73,17 @@ class CategoriesFragment : Fragment() {
     }
 
     private val renderCategories = Observer<List<CatEntity>> {
-        cat_recyclerview.visibility = View.VISIBLE
-        categories_screen_loader.stopShimmer()
-        categories_screen_loader.visibility = View.GONE
+        categories.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
         adapter.updateData(it)
     }
 
     private val renderError = Observer<Any> {
-        categories_screen_loader.visibility = View.GONE
-        cat_net_err.visibility = View.VISIBLE
-        try_again_btn.setOnClickListener {
-            categories_screen_loader.visibility = View.VISIBLE
-            cat_net_err.visibility = View.GONE
+        progressBar.visibility = View.GONE
+        errorLayout.visibility = View.VISIBLE
+        tryBtn.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            errorLayout.visibility = View.GONE
             viewModel.fetchFromApi()
         }
     }

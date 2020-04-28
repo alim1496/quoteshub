@@ -20,91 +20,39 @@ import com.google.firebase.iid.InstanceIdResult
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
 import android.util.Log
-
-
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var sideNav: NavigationView
-
-    private val onSideNavClickListener = NavigationView.OnNavigationItemSelectedListener {
-        val intent = Intent(this, Privacy::class.java)
-        when (it.itemId) {
-            R.id.navigation_home -> {
-                replaceFragment(HomeFragment())
-                closeDrawer()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_dashboard -> {
-                replaceFragment(CategoriesFragment())
-                closeDrawer()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-                replaceFragment(AuthorsFragment())
-                closeDrawer()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.drawer_fav -> {
-                replaceFragment(Favorites())
-                closeDrawer()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.drawer_fb -> {
-                val webIntent = Intent(Intent.ACTION_VIEW)
-                webIntent.data = Uri.parse(Constants.fbPage)
-                startActivity(webIntent)
-                closeDrawer()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.drawer_tnc -> {
-                intent.putExtra("url", Constants.termsUrl)
-                startActivity(intent)
-                closeDrawer()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.drawer_policy -> {
-                intent.putExtra("url", Constants.policyUrl)
-                startActivity(intent)
-                closeDrawer()
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
-
-    private fun closeDrawer() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        }
-    }
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
 
-        sideNav = findViewById(R.id.side_navigation)
-        drawerLayout = findViewById(R.id.main_drawer)
-
-        val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar, 0, 0)
-
-        toggle.drawerArrowDrawable.color = resources.getColor(R.color.textColorSecondary)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        sideNav.setNavigationItemSelectedListener(onSideNavClickListener)
-
-//        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this,
-//            OnSuccessListener<InstanceIdResult> { instanceIdResult ->
-//                val newToken = instanceIdResult.token
-//                Log.e("newToken", newToken)
-//            })
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         replaceFragment(HomeFragment())
 
+    }
+
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_home -> {
+                replaceFragment(HomeFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_dashboard -> {
+                replaceFragment(CategoriesFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_notifications -> {
+                replaceFragment(AuthorsFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
     }
 
     private fun replaceFragment(fragment: Fragment) {

@@ -11,8 +11,8 @@ interface DestinationServices {
     @GET("quotes/v1/quotes/feed/")
     fun getFeed(): Call<FeedModel>
 
-    @GET("quotes/v1/categories/team/")
-    fun getCategories(): Call<CategoryModel>
+    @GET("quotes/v2/categories/")
+    fun getCategories(): Call<List<Category>>
 
     @GET("quotes/v1/categories/{id}/quotes/")
     fun getCategoryQuotes(
@@ -20,11 +20,11 @@ interface DestinationServices {
         @Query("page") page: Int
     ): Call<Response>
 
-    @GET("quotes/v1/sources/team/")
+    @GET("quotes/v2/sources/")
     fun getAuthors(
         @Query("page") page: Int,
         @Query("alphabet") alphabet: String
-    ): Call<AuthorModel>
+    ): Call<List<Author>>
 
     @GET("quotes/v1/sources/{id}/details/")
     fun getAuthorDetails(

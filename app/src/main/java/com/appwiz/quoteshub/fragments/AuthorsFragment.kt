@@ -11,6 +11,8 @@ import android.widget.AbsListView
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.activities.SingleAuthor
@@ -51,19 +53,11 @@ class AuthorsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_authors, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val title: TextView = activity!!.findViewById(R.id.app_tool_bar_title)
-        title.text = "Authors"
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val layoutManager = activity?.let { AutoFitGLM(it, 200) }
+        val layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         setupViewModel()
-        if (layoutManager != null) {
-            setupUI(layoutManager)
-        }
+        setupUI(layoutManager)
 
         author_recyclerview?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -75,11 +69,9 @@ class AuthorsFragment : Fragment() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
-                    if (layoutManager != null) {
-                        visibleItemCount = layoutManager.childCount
-                        totalItemCount = layoutManager.itemCount
-                        pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
-                    }
+                    visibleItemCount = layoutManager.childCount
+                    totalItemCount = layoutManager.itemCount
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
                     if (scrolling) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
                             pageRequested += 1
@@ -90,12 +82,10 @@ class AuthorsFragment : Fragment() {
             }
         })
 
-        if (layoutManager != null) {
-            viewModel.fetchFromApi(pageRequested, letterSelected)
-        }
+        viewModel.fetchFromApi(pageRequested, letterSelected)
     }
 
-    private fun setupUI(layoutManager: AutoFitGLM) {
+    private fun setupUI(layoutManager: LinearLayoutManager) {
         val letterManager = FlexboxLayoutManager(context)
         letterManager.flexDirection = FlexDirection.ROW
         letterManager.justifyContent = JustifyContent.CENTER
@@ -107,16 +97,14 @@ class AuthorsFragment : Fragment() {
             pageRequested = 1
             letterSelected = letter
             authors_screen_loader.visibility = View.VISIBLE
-            authors_screen_loader.startShimmer()
             author_recyclerview.visibility = View.GONE
             tv_empty_author.visibility = View.GONE
             adapter.emptyAdapter()
             viewModel.fetchFromApi(pageRequested, letterSelected)
         }}
 
-        authors_screen_loader.startShimmer()
         author_recyclerview.layoutManager = layoutManager
-        adapter = AuthorsAdapter(viewModel.authors.value?: emptyList(), false) { author: Author, position: Int ->
+        adapter = AuthorsAdapter(viewModel.authors.value?: emptyList()) { author: Author, position: Int ->
             val intent = Intent(context, SingleAuthor::class.java)
             intent.putExtra("authorID", author.id)
             intent.putExtra("authorname", author.name)
@@ -133,14 +121,12 @@ class AuthorsFragment : Fragment() {
     }
 
     private val renderAuthors = Observer<List<Author>> {
-        authors_screen_loader.stopShimmer()
         authors_screen_loader.visibility = View.GONE
         author_recyclerview.visibility = View.VISIBLE
         adapter.addItems(it)
     }
 
     private val renderEmpty = Observer<Boolean> {
-        authors_screen_loader.stopShimmer()
         authors_screen_loader.visibility = View.GONE
         var visible = View.GONE
         if (it) visible = View.VISIBLE

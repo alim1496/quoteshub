@@ -1,6 +1,8 @@
 package com.appwiz.quoteshub.repositories
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import com.appwiz.quoteshub.models.Category
 import com.appwiz.quoteshub.models.CategoryModel
 import com.appwiz.quoteshub.room.dao.CatDao
 import com.appwiz.quoteshub.room.entity.CatEntity
@@ -13,7 +15,7 @@ import retrofit2.Response
 
 class CategoriesRepo(private val dao: CatDao) {
     val categories:LiveData<List<CatEntity>> = dao.showCats()
-    private lateinit var requestCall: Call<CategoryModel>
+    private lateinit var requestCall: Call<List<Category>>
 
     suspend fun addCatToDB(cats: List<CatEntity>) {
         dao.addCats(cats)
@@ -25,15 +27,15 @@ class CategoriesRepo(private val dao: CatDao) {
 
     fun retrieveCategories(callback: OperationCallback) {
         requestCall = ServiceBuilder.buildService(DestinationServices::class.java).getCategories()
-        requestCall.enqueue(object : Callback<CategoryModel> {
-            override fun onFailure(call: Call<CategoryModel>, t: Throwable) {
+        requestCall.enqueue(object : Callback<List<Category>> {
+            override fun onFailure(call: Call<List<Category>>, t: Throwable) {
                 callback.onError(t.message)
             }
 
-            override fun onResponse(call: Call<CategoryModel>, response: Response<CategoryModel>) {
+            override fun onResponse(call: Call<List<Category>>, response: Response<List<Category>>) {
                 if (response.isSuccessful) {
                     val categories = response.body()!!
-                    callback.onSuccess(categories.results)
+                    callback.onSuccess(categories)
                 } else {
                     callback.onError("Error")
                 }

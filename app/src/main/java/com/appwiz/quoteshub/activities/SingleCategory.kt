@@ -6,6 +6,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AbsListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,12 +18,14 @@ import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.models.Response
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
+import com.appwiz.quoteshub.utils.NetworkState
 import kotlinx.android.synthetic.main.single_category.*
 import retrofit2.Call
 import retrofit2.Callback
 
 class SingleCategory : AppCompatActivity() {
-    var adapter: QuotesAdapter? = null
+    lateinit var adapter: QuotesAdapter
+    lateinit var networkState: MutableLiveData<NetworkState>
     var scrolling: Boolean = false
     var visibleItemCount: Int = 0
     var totalItemCount: Int = 0
@@ -34,6 +38,7 @@ class SingleCategory : AppCompatActivity() {
         setSupportActionBar(cat_tool_bar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        networkState = MutableLiveData()
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = RecyclerView.VERTICAL
 
@@ -63,8 +68,10 @@ class SingleCategory : AppCompatActivity() {
                             && pastVisiblesItems >= 0 && totalItemCount >= 10) {
                             pageRequested += 1
                             if (id != null && id != 0) {
+                                networkState.postValue(NetworkState.LOADING)
                                 fetchMore(id, pageRequested)
                             } else if (more != null) {
+                                networkState.postValue(NetworkState.LOADING)
                                 fetchHomeMore(more, pageRequested)
                             }
                         }
@@ -78,6 +85,7 @@ class SingleCategory : AppCompatActivity() {
         } else if (more != null) {
             fetchHomeData(layoutManager, more, 1)
         }
+        networkState.observe(this, Observer { adapter::setNetworkState })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -120,12 +128,14 @@ class SingleCategory : AppCompatActivity() {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
 
                 if (response.isSuccessful) {
+                    networkState.postValue(NetworkState.LOADED)
                     val quoteList : Response = response.body()!!
-                    adapter?.addItems(quoteList.results)
+                    adapter.addItems(quoteList.results)
                 }
             }
 
             override fun onFailure(call: Call<Response>, t: Throwable) {
+                networkState.postValue(NetworkState.error("Network Error"))
                 Log.e("alim", "oh ho")
             }
         })
@@ -147,7 +157,6 @@ class SingleCategory : AppCompatActivity() {
                         quoteActions.show(supportFragmentManager, quoteActions.tag)
                     }
                     single_cat_recycler.adapter = adapter
-                    single_cat_recycler.addItemDecoration(DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL))
                 }
             }
 

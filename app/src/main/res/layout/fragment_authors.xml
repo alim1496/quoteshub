@@ -1,67 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragments.AuthorsFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.AuthorsFragment">
 
-    <LinearLayout
-            android:orientation="vertical"
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/alphabet_recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-    >
+            android:layout_height="wrap_content" />
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/alphabet_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        />
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/author_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:visibility="invisible"
-        />
-
-    </LinearLayout>
-
-
-    <com.facebook.shimmer.ShimmerFrameLayout
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/author_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/authors_screen_loader">
-        <include layout="@layout/shimmer_authors"/>
-    </com.facebook.shimmer.ShimmerFrameLayout>
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:layout_below="@id/alphabet_recycler"
+            android:visibility="invisible" />
 
-    <LinearLayout
-            android:visibility="gone"
+    <ProgressBar
+            android:id="@+id/authors_screen_loader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+
+    <TextView
             android:id="@+id/tv_empty-author"
-            android:layout_gravity="center"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/empty_authors"
+            android:gravity="center"
+            android:text="No Author Found"
+            android:visibility="gone" />
 
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/empty_authors"
-                android:layout_gravity="center"
-                />
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="No Author Found"
-                />
-
-    </LinearLayout>
 
     <include
             android:id="@+id/auth_net_err"
-            layout="@layout/common_error_container"/>
-</FrameLayout>
+            layout="@layout/common_error_container" />
+</RelativeLayout>

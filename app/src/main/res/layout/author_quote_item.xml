@@ -1,33 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="vertical"
-        android:padding="10dp">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_margin="10dp">
 
-    <TextView
-            android:id="@+id/auth_quote_text"
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_regular"
-            android:textSize="16sp" />
+            android:padding="10dp"
+            android:background="@color/textColorPrimary"
+            >
 
-    <TextView
-            android:id="@+id/auth_quote_src_full"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_light"
-            android:textSize="14sp" />
+        <TextView
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:id="@+id/auth_quote_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/textColorSecondary"
+                android:gravity="center"
+                android:textSize="16sp"
+                tools:text="Education is the most powerful weapon which you can use to change the world" />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/author_quote_tags"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
+        <TextView
+                android:id="@+id/auth_quote_src_full"
+                android:textColor="@color/textColorSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/auth_quote_text"
+                android:fontFamily="@font/roboto_light"
+                android:gravity="center"
+                android:textSize="14sp"
+                tools:text="Nelson Mandela" />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/author_quote_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/auth_quote_src_full"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
 
 
-</LinearLayout>
+
+
+
 
 

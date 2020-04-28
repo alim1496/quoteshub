@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
-
-    <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/categories_screen_loader"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
-        <include layout="@layout/shimmer_categories"/>
-    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/cat_recyclerview"
             android:visibility="invisible"
-            android:layout_marginTop="10dp"
+            android:scrollbars="vertical"
     />
+
+    <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
 
     <include
             layout="@layout/common_error_container"
-            android:id="@+id/cat_net_err"/>
-</FrameLayout>
+            android:id="@+id/cat_net_err"
+            />
+
+</RelativeLayout>

@@ -1,6 +1,6 @@
 package com.appwiz.quoteshub.repositories
 
-import com.appwiz.quoteshub.models.AuthorModel
+import com.appwiz.quoteshub.models.Author
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.OperationCallback
 import com.appwiz.quoteshub.services.ServiceBuilder
@@ -9,19 +9,19 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class AuthorsRepo {
-    private lateinit var requestCall: Call<AuthorModel>
+    private lateinit var requestCall: Call<List<Author>>
 
     fun retrieveAuthors(page: Int, letter: String, callback: OperationCallback) {
         requestCall = ServiceBuilder.buildService(DestinationServices::class.java).getAuthors(page, letter)
-        requestCall.enqueue(object : Callback<AuthorModel> {
-            override fun onFailure(call: Call<AuthorModel>, t: Throwable) {
+        requestCall.enqueue(object : Callback<List<Author>> {
+            override fun onFailure(call: Call<List<Author>>, t: Throwable) {
                 callback.onError(t.message)
             }
 
-            override fun onResponse(call: Call<AuthorModel>, response: Response<AuthorModel>) {
+            override fun onResponse(call: Call<List<Author>>, response: Response<List<Author>>) {
                 if (response.isSuccessful) {
                     val authors = response.body()!!
-                    callback.onSuccess(authors.results)
+                    callback.onSuccess(authors)
                 } else {
                     callback.onError("Error")
                 }

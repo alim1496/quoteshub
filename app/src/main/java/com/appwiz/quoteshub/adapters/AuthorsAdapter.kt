@@ -11,12 +11,10 @@ import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.models.Author
 import com.squareup.picasso.Picasso
 
-class AuthorsAdapter(var authors: List<Author>, val isShort:Boolean, val clcikListener: (Author, Int) -> Unit)
-    : RecyclerView.Adapter<AuthorsAdapter.MyViewHolder>() {
+class AuthorsAdapter(var authors: List<Author>, val clcikListener: (Author, Int) -> Unit) :
+    RecyclerView.Adapter<AuthorsAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.author_item, parent, false)
-        val homeView = LayoutInflater.from(parent.context).inflate(R.layout.home_author_item, parent, false)
-        if (isShort) return MyViewHolder(homeView)
         return MyViewHolder(view)
     }
 
@@ -41,22 +39,16 @@ class AuthorsAdapter(var authors: List<Author>, val isShort:Boolean, val clcikLi
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun setData(author:Author) {
-            if (isShort) {
-                val authName:TextView = itemView.findViewById(R.id.home_author_name)
-                val authImg:ImageView = itemView.findViewById(R.id.home_author_img)
-                val authCount:TextView = itemView.findViewById(R.id.home_author_quotes)
-                authName.text = author.name
-                Picasso.get().load(author.image).placeholder(R.drawable.avatar_placeholder).into(authImg)
-                authCount.text = author.quotes.toString()
-            } else {
-                val authName:TextView = itemView.findViewById(R.id.author_name)
-                val authImg:ImageView = itemView.findViewById(R.id.author_img)
-                val authCount:TextView = itemView.findViewById(R.id.author_quotes)
-                authName.text = author.name
-                Picasso.get().load(author.image).placeholder(R.drawable.avatar_placeholder).into(authImg)
-                authCount.text = author.quotes.toString()
-            }
+        fun setData(author: Author) {
+
+            val authName: TextView = itemView.findViewById(R.id.author_name)
+            val authImg: ImageView = itemView.findViewById(R.id.author_img)
+            val authCount: TextView = itemView.findViewById(R.id.author_quotes)
+            authName.text = author.name
+            Picasso.get().load(author.image).placeholder(R.drawable.avatar_placeholder)
+                .into(authImg)
+            authCount.text = author.quotes.toString()
+
         }
     }
 }

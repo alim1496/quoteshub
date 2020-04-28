@@ -1,5 +1,6 @@
 package com.appwiz.quoteshub.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ class CategoriesVM(private val repository: CategoriesRepo) : ViewModel() {
     val onMessageError: LiveData<Any> = _onMessageError
 
     fun fetchFromApi() {
+        Log.e("repo", "called from fetch api")
         repository.retrieveCategories(object : OperationCallback {
 
             override fun onSuccess(obj: Any?) {
