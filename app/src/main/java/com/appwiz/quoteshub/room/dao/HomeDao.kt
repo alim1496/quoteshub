@@ -30,8 +30,8 @@ interface HomeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAuthor(authorEntity: List<AuthorEntity>)
 
-    @Query("select * from AuthorEntity")
-    fun showAuthor():LiveData<List<AuthorEntity>>
+    @Query("select * from AuthorEntity where name like :letter")
+    suspend fun showAuthor(letter: String) : List<AuthorEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addDayQuote(dayQuoteEntity: DayQuoteEntity)

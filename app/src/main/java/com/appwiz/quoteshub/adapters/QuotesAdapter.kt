@@ -1,30 +1,24 @@
 package com.appwiz.quoteshub.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.models.Quote
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import kotlinx.android.synthetic.main.action_buttons.view.*
 import kotlinx.android.synthetic.main.author_quote_item.view.*
-import com.appwiz.quoteshub.activities.SingleTag
-import com.appwiz.quoteshub.models.Tag
-import com.appwiz.quoteshub.utils.CommonUtils
 import com.appwiz.quoteshub.utils.NetworkState
 import com.appwiz.quoteshub.utils.NetworkStateViewHolder
 import java.lang.IllegalArgumentException
 
 
 class QuotesAdapter(val context: Context, var quotes: List<Quote>,
-                    val showQuotes: Boolean = true, val listener: (Quote) -> Unit)
+                    val showQuotes: Boolean = false, val listener: (Quote) -> Unit)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val viewPool = RecyclerView.RecycledViewPool()
@@ -58,21 +52,8 @@ class QuotesAdapter(val context: Context, var quotes: List<Quote>,
                 tagsManager.flexDirection = FlexDirection.ROW
                 tagsManager.justifyContent = JustifyContent.CENTER
 
-                if (showQuotes) {
-                    holder1.itemView.author_quote_tags.apply {
-                        layoutManager = tagsManager
-                        adapter = TagsAdapter(quote.tags) { item: Tag, position: Int ->
-                            val intent = Intent(context, SingleTag::class.java)
-                            intent.putExtra("tagID", item.id)
-                            intent.putExtra("tagName", item.name)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            this.context.startActivity(intent)
-                        }
-                        setRecycledViewPool(viewPool)
-                    }
-                } else {
-                    holder1.itemView.author_quote_tags.visibility = View.GONE
-                }
+                holder1.itemView.author_quote_tags.visibility = View.GONE
+
 
                 holder1.itemView.setOnClickListener {
                     listener(quote)

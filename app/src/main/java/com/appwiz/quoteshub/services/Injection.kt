@@ -23,7 +23,7 @@ object Injection {
         return FavRepo(dao)
     }
 
-    fun getAuthorsRepo() : AuthorsRepo {
-        return AuthorsRepo()
+    fun getAuthorsRepo(dao: HomeDao) : AuthorsRepo {
+        return AuthorsRepo(dao)
     }
 }

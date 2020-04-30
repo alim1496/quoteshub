@@ -17,7 +17,6 @@ import kotlin.concurrent.thread
 class HomeQuotesVM(private val repository: HomeQuotesRepo) : ViewModel() {
     val recentQuotes:LiveData<List<HomeEntity>> = repository.recentQuotes
     val featuredQuotes:LiveData<List<HomeEntity>> = repository.featuredQuotes
-    val featuredAuthors:LiveData<List<AuthorEntity>> = repository.featuredAuthors
     val eventsToday:LiveData<List<EventEntity>> = repository.eventsToday
     val dayQuote:LiveData<DayQuoteEntity> = repository.dayQuote
     val titlesHome:LiveData<List<TitleEntity>> = repository.homeTitles

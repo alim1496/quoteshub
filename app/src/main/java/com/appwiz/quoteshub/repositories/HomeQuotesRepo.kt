@@ -14,7 +14,6 @@ import retrofit2.Response
 class HomeQuotesRepo(private val dao: HomeDao) {
     val recentQuotes:LiveData<List<HomeEntity>> = dao.showHome(0)
     val featuredQuotes:LiveData<List<HomeEntity>> = dao.showHome(1)
-    val featuredAuthors:LiveData<List<AuthorEntity>> = dao.showAuthor()
     val eventsToday:LiveData<List<EventEntity>> = dao.showEvent()
     val dayQuote:LiveData<DayQuoteEntity> = dao.showDayQuote()
     val homeTitles:LiveData<List<TitleEntity>> = dao.showTitle()

@@ -3,6 +3,7 @@ package com.appwiz.quoteshub.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,6 @@ import android.widget.AbsListView
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
@@ -20,6 +20,8 @@ import com.appwiz.quoteshub.adapters.AlphabetAdapter
 import com.appwiz.quoteshub.adapters.AuthorsAdapter
 import com.appwiz.quoteshub.models.Author
 import com.appwiz.quoteshub.models.AuthorModel
+import com.appwiz.quoteshub.room.AppDB
+import com.appwiz.quoteshub.room.entity.AuthorEntity
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.Injection
 import com.appwiz.quoteshub.services.ServiceBuilder
@@ -31,6 +33,8 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.common_error_container.*
 import kotlinx.android.synthetic.main.fragment_authors.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -81,8 +85,18 @@ class AuthorsFragment : Fragment() {
                 }
             }
         })
-
+        loadInitial()
         viewModel.fetchFromApi(pageRequested, letterSelected)
+        loadInitial()
+    }
+
+    private fun loadInitial() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val authors = viewModel.fetchFromCache(letterSelected)
+            withContext(Dispatchers.Main) {
+                adapter.addItems(authors)
+            }
+        }
     }
 
     private fun setupUI(layoutManager: LinearLayoutManager) {
@@ -104,7 +118,7 @@ class AuthorsFragment : Fragment() {
         }}
 
         author_recyclerview.layoutManager = layoutManager
-        adapter = AuthorsAdapter(viewModel.authors.value?: emptyList()) { author: Author, position: Int ->
+        adapter = AuthorsAdapter(emptyList()) { author: AuthorEntity, position: Int ->
             val intent = Intent(context, SingleAuthor::class.java)
             intent.putExtra("authorID", author.id)
             intent.putExtra("authorname", author.name)
@@ -114,16 +128,12 @@ class AuthorsFragment : Fragment() {
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(this, BaseViewModelFactory{AuthorsVM(Injection.getAuthorsRepo())}).get(AuthorsVM::class.java)
-        viewModel.authors.observe(this, renderAuthors)
+        val db = context?.let { AppDB(it) }
+        if (db != null) {
+            viewModel = ViewModelProviders.of(this, BaseViewModelFactory{AuthorsVM(Injection.getAuthorsRepo(db.homeDao()))}).get(AuthorsVM::class.java)
+        }
         viewModel.emptyAuthors.observe(this, renderEmpty)
         viewModel.onMessageError.observe(this, renderError)
-    }
-
-    private val renderAuthors = Observer<List<Author>> {
-        authors_screen_loader.visibility = View.GONE
-        author_recyclerview.visibility = View.VISIBLE
-        adapter.addItems(it)
     }
 
     private val renderEmpty = Observer<Boolean> {

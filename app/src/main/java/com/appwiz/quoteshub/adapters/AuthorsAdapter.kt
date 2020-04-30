@@ -1,5 +1,6 @@
 package com.appwiz.quoteshub.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +10,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.models.Author
+import com.appwiz.quoteshub.room.entity.AuthorEntity
 import com.squareup.picasso.Picasso
 
-class AuthorsAdapter(var authors: List<Author>, val clcikListener: (Author, Int) -> Unit) :
+class AuthorsAdapter(var authors: List<AuthorEntity>, val clcikListener: (AuthorEntity, Int) -> Unit) :
     RecyclerView.Adapter<AuthorsAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.author_item, parent, false)
@@ -33,13 +35,13 @@ class AuthorsAdapter(var authors: List<Author>, val clcikListener: (Author, Int)
         notifyDataSetChanged()
     }
 
-    fun addItems(newAuthors: List<Author>) {
+    fun addItems(newAuthors: List<AuthorEntity>) {
         authors += newAuthors
         notifyDataSetChanged()
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun setData(author: Author) {
+        fun setData(author: AuthorEntity) {
 
             val authName: TextView = itemView.findViewById(R.id.author_name)
             val authImg: ImageView = itemView.findViewById(R.id.author_img)
