@@ -28,10 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.appwiz.quoteshub.activities.SingleCategory"/>
         <activity android:name="com.appwiz.quoteshub.activities.SingleAuthor"/>
-        <activity android:name="com.appwiz.quoteshub.activities.SingleTag"/>
-        <activity android:name="com.appwiz.quoteshub.activities.Privacy"/>
+        <activity android:name="com.appwiz.quoteshub.activities.ActivityQuotes">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

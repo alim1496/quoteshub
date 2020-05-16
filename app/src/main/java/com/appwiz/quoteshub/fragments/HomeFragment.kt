@@ -1,50 +1,51 @@
 package com.appwiz.quoteshub.fragments
 
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.appwiz.quoteshub.R
-import com.appwiz.quoteshub.activities.SingleAuthor
-import com.appwiz.quoteshub.activities.SingleCategory
-import com.appwiz.quoteshub.activities.SingleTag
-import com.appwiz.quoteshub.adapters.*
-import com.appwiz.quoteshub.models.Author
-import com.appwiz.quoteshub.models.Quote
-import com.appwiz.quoteshub.models.Source
-import com.appwiz.quoteshub.models.Tag
+import com.appwiz.quoteshub.adapters.TabAdapter
+import com.appwiz.quoteshub.repositories.HomeRepository
 import com.appwiz.quoteshub.room.AppDB
-import com.appwiz.quoteshub.room.entity.*
-import com.appwiz.quoteshub.services.Injection
-import com.appwiz.quoteshub.utils.CommonUtils
 import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
-import com.appwiz.quoteshub.viewmodels.HomeQuotesVM
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
-import kotlinx.android.synthetic.main.action_buttons.*
-import kotlinx.android.synthetic.main.common_error_container.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import java.lang.Exception
+import com.appwiz.quoteshub.viewmodels.HomeViewModel
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
-    lateinit var adapter: HomeQuotesAdapter
-    lateinit var adapter5: HomeQuotesAdapter
-    lateinit var adapter2 : HomeAuthorsAdapter
-    lateinit var adapter3 : TagsAdapter
-    lateinit var adapter4 : EventsAdapter
-    lateinit var viewModel: HomeQuotesVM
+
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager2
+    private lateinit var viewModel: HomeViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        tabLayout = view.findViewById(R.id.tab_layout)
+        viewPager = view.findViewById(R.id.view_pager)
+
+        val db = context?.let { AppDB(it) }
+        if (db != null) {
+            viewModel = ViewModelProviders.of(this, BaseViewModelFactory{HomeViewModel(HomeRepository(db))}).get(HomeViewModel::class.java)
+        }
+        viewPager.adapter = TabAdapter(requireActivity(), viewModel)
+        val mediator = TabLayoutMediator(tabLayout, viewPager, object : TabLayoutMediator.TabConfigurationStrategy {
+            override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
+                if (position == 0) {
+                    tab.text = "Latest"
+                } else {
+                    tab.text = "Featured"
+                }
+            }
+
+        })
+        mediator.attach()
+
+        return view
     }
 
 }

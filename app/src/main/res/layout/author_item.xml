@@ -15,35 +15,33 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/author_img"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="10dp"
                 app:civ_border_color="#ffffff"
-                android:layout_centerVertical="true"/>
+                android:layout_centerHorizontal="true"/>
 
         <TextView
                 android:id="@+id/author_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_margin="5dp"
                 android:ellipsize="end"
                 android:fontFamily="@font/roboto_regular"
                 android:maxLines="1"
                 tools:text="Albert Einstein"
-                android:layout_toEndOf="@id/author_img"
-                android:layout_alignTop="@id/author_img"
-                android:scrollHorizontally="true" />
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:layout_below="@id/author_img"/>
 
         <TextView
                 android:id="@+id/author_quotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:fontFamily="@font/roboto_regular"
-                android:layout_alignStart="@id/author_name"
-                android:layout_alignBottom="@id/author_img"
                 android:layout_below="@id/author_name"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
                 tools:text="307"/>
     </RelativeLayout>
 

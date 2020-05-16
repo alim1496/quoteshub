@@ -12,14 +12,8 @@ import androidx.fragment.app.Fragment
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.fragments.AuthorsFragment
 import com.appwiz.quoteshub.fragments.CategoriesFragment
-import com.appwiz.quoteshub.fragments.Favorites
 import com.appwiz.quoteshub.fragments.HomeFragment
-import com.appwiz.quoteshub.utils.Constants
-import com.google.android.material.navigation.NavigationView
-import com.google.firebase.iid.InstanceIdResult
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.iid.FirebaseInstanceId
-import android.util.Log
+import com.appwiz.quoteshub.fragments.MiscFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -49,6 +43,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.navigation_notifications -> {
                 replaceFragment(AuthorsFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_misc -> {
+                replaceFragment(MiscFragment())
                 return@OnNavigationItemSelectedListener true
             }
         }

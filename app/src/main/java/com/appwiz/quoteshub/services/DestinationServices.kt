@@ -8,39 +8,34 @@ import retrofit2.http.Query
 
 interface DestinationServices {
 
-    @GET("quotes/v1/quotes/feed/")
-    fun getFeed(): Call<FeedModel>
+    @GET("quotes/v2/home/")
+    fun getFeed(
+        @Query("featured") featured: Int,
+        @Query("page") page: Int
+    ): Call<List<Quote>>
 
     @GET("quotes/v2/categories/")
     fun getCategories(): Call<List<Category>>
 
-    @GET("quotes/v1/categories/{id}/quotes/")
+    @GET("quotes/v2/category/{id}/")
     fun getCategoryQuotes(
         @Path("id") id : Int,
         @Query("page") page: Int
-    ): Call<Response>
+    ): Call<List<Quote>>
 
     @GET("quotes/v2/sources/")
     fun getAuthors(
-        @Query("page") page: Int,
-        @Query("alphabet") alphabet: String
+        @Query("page") page: Int
     ): Call<List<Author>>
 
-    @GET("quotes/v1/sources/{id}/details/")
+    @GET("quotes/v2/source/{id}/")
     fun getAuthorDetails(
-        @Path("id") id: Int,
-        @Query("page") page: Int
+        @Path("id") id: Int
     ): Call<AuthorDetails>
 
-    @GET("quotes/v1/tags/{id}/details/")
-    fun getTagQuotes(
+    @GET("quotes/v2/source/{id}/quotes/")
+    fun getMoreQuotes(
         @Path("id") id: Int,
         @Query("page") page: Int
-    ): Call<Response>
-
-    @GET("quotes/v1/quotes/more/")
-    fun getMoreQuotes(
-        @Query("more") more: String,
-        @Query("page") page: Int
-    ): Call<Response>
+    ): Call<List<Quote>>
 }

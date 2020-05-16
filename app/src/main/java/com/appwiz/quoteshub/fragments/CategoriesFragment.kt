@@ -7,22 +7,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
-import com.appwiz.quoteshub.activities.SingleCategory
+import com.appwiz.quoteshub.activities.ActivityQuotes
 import com.appwiz.quoteshub.adapters.CategoriesAdapter
 import com.appwiz.quoteshub.room.AppDB
 import com.appwiz.quoteshub.room.entity.CatEntity
 import com.appwiz.quoteshub.services.Injection
-import com.appwiz.quoteshub.utils.AutoFitGLM
 import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
 import com.appwiz.quoteshub.viewmodels.CategoriesVM
 
@@ -32,7 +28,7 @@ class CategoriesFragment : Fragment() {
     lateinit var viewModel: CategoriesVM
     lateinit var progressBar: ProgressBar
     lateinit var categories: RecyclerView
-    lateinit var errorLayout: LinearLayout
+    lateinit var errorLayout: RelativeLayout
     lateinit var tryBtn: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,9 +49,10 @@ class CategoriesFragment : Fragment() {
 
     private fun setupUI() {
         adapter = CategoriesAdapter(viewModel.categories.value?: emptyList()) { item : CatEntity, position: Int ->
-            val intent = Intent(context, SingleCategory::class.java)
-            intent.putExtra("catID", item.id)
-            intent.putExtra("catName", item.name)
+            val intent = Intent(context, ActivityQuotes::class.java)
+            intent.putExtra("id", item.id)
+            intent.putExtra("name", item.name)
+            intent.putExtra("type", "category")
             startActivity(intent)
         }
         categories.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -68,8 +65,8 @@ class CategoriesFragment : Fragment() {
         if (db != null) {
             viewModel = ViewModelProviders.of(this, BaseViewModelFactory{CategoriesVM(Injection.getCategoriesRepo(db.catDao()))}).get(CategoriesVM::class.java)
         }
-        viewModel.categories.observe(this, renderCategories)
-        viewModel.onMessageError.observe(this, renderError)
+        viewModel.categories.observe(viewLifecycleOwner, renderCategories)
+        viewModel.onMessageError.observe(viewLifecycleOwner, renderError)
     }
 
     private val renderCategories = Observer<List<CatEntity>> {

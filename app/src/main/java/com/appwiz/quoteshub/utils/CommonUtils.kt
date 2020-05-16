@@ -3,60 +3,41 @@ package com.appwiz.quoteshub.utils
 import android.content.*
 import android.widget.Toast
 import com.appwiz.quoteshub.models.Quote
-import com.appwiz.quoteshub.room.AppDB
-import com.appwiz.quoteshub.room.entity.FavEntity
 import com.appwiz.quoteshub.utils.Constants.Companion.playstorePage
-import kotlinx.coroutines.*
 import java.lang.Exception
-import kotlin.coroutines.CoroutineContext
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 
 
-class CommonUtils : CoroutineScope {
-    private val job = Job()
+class CommonUtils {
 
-    override val coroutineContext: CoroutineContext
-        get() = job
-
-    fun favQuote(context: Context, quote: Quote, authorName: String) {
-        val name = if (authorName != "") authorName
-        else quote.source.name
-        val entity = FavEntity(quote.id, quote.title, name)
-        val db = AppDB(context)
-
-        launch {
-            withContext(Dispatchers.IO) {
-                try {
-                    db.favDao().addFav(entity)
-                } catch (e:Exception) {
-                    return@withContext
-                }
-            }
-        }
-    }
-
-    private fun getContent(quote:Quote, authorName: String) : String {
-        val name = if (authorName != "") authorName
-        else quote.source.name
-        return "\"" + quote.title + "\"" + " - " +  name
-    }
-
-    fun copyQuote(context:Context, quote:Quote, authorName: String) {
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?;
-        val clip = ClipData.newPlainText("label", getContent(quote, authorName))
+    fun copyQuote(context:Context, quote:Quote) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+        val writer = if (quote.source != null) " - " + quote.source.name else ""
+        val content = "\"" + quote.title + "\"" + writer
+        val clip = ClipData.newPlainText("label", content)
         clipboard!!.setPrimaryClip(clip)
         Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
-    fun shareQuote(context:Context, quote:Quote, authorName: String) {
+    fun shareSocial(context: Context, packageName:String, quote: Quote) {
         val intent = Intent()
         intent.action = Intent.ACTION_SEND
-        val content = getContent(quote, authorName) + "\n" + playstorePage
-        intent.putExtra(Intent.EXTRA_TEXT, content)
         intent.type = "text/plain"
+        intent.setPackage(packageName)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        val chooserIntent = Intent.createChooser(intent, "Share to:")
-        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(chooserIntent)
+        val writer = if (quote.source != null) " - " + quote.source.name else ""
+        val content = "\"" + quote.title + "\"" + writer + "\n" + playstorePage
+        intent.putExtra(Intent.EXTRA_TEXT, content)
+        try {
+            context.startActivity(intent)
+        } catch (e:Exception) {
+            val url = "https://play.google.com/store/apps/details?id=${packageName}"
+            val _intent = Intent(Intent.ACTION_VIEW)
+            _intent.data = Uri.parse(url)
+            context.startActivity(_intent)
+        }
     }
 
 }
