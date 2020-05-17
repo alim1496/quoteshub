@@ -47,8 +47,8 @@ class HomeQuotesAdapter(val context:Context) : PagedListAdapter<HomeQuote, Recyc
             }
 
         }
-        private val COLOR = arrayOf("#49FFB9", "#72E6DA", "#FFD492", "#E6677D", "#FEF2DF", "#FCF18B", "#E6E4E4", "#C9FFFD", "#EED2EE", "#F4AAAB")
-        private val EXTRA = "#F7E6C5"
+        private val COLOR = arrayOf("#F7E6C5", "#72E6DA", "#FFD492", "#FFCCD5", "#FEF2DF", "#FCF18B", "#E6E4E4", "#C9FFFD", "#EED2EE", "#F4AAAB")
+        private val EXTRA = "#C1E950"
     }
 
     class QuoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
