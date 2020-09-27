@@ -82,6 +82,7 @@ class SingleAuthor : AppCompatActivity() {
 
             override fun onResponse(call: Call<AuthorDetails>, response: Response<AuthorDetails>) {
                 loader.visibility = View.GONE
+                button.visibility = View.VISIBLE
                 val res: AuthorDetails = response.body()!!
                 desc.text = res.source.shortDesc
                 Picasso.get().load(res.source.cover).placeholder(R.drawable.empty_cover).into(cover)

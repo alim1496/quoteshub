@@ -1,77 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.SingleAuthor">
+        >
 
-    <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:elevation="10dp"
-            app:theme="@style/ToolbarTheme"
-            app:titleTextColor="@color/white" />
+            android:layout_height="match_parent"
+            tools:context=".activities.SingleAuthor">
 
-    <ImageView
-            android:id="@+id/author_cover"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@id/toolbar"
-            android:scaleType="fitXY"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true"
-            />
-    <TextView
-            android:id="@+id/author_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/author_cover"
-            android:padding="10dp"
-            android:fontFamily="@font/roboto_regular"
-            android:textSize="16sp"
-            android:maxLines="7"
-            tools:text="Hello guys how are you nice all"
-            />
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/quotesRV"
-            android:layout_below="@id/author_desc"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"/>
-    <com.appwiz.quoteshub.utils.CarouselItemIndicator
-            android:id="@+id/item_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginEnd="20dp"
-            android:layout_below="@id/quotesRV"
-            android:layout_centerHorizontal="true"
-            android:gravity="end|center_vertical"
-            android:visibility="gone" />
-    <TextView
-            android:id="@+id/see_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/item_indicator"
-            android:layout_centerHorizontal="true"
-            android:text="@string/see_all"
-            android:textSize="16sp"
-            android:layout_margin="20dp"
-            android:fontFamily="@font/roboto_regular"
-            android:background="@color/textColorPrimary"
-            android:textColor="@color/white"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
-    <ProgressBar
-            android:id="@+id/loader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:elevation="10dp"
+                app:theme="@style/ToolbarTheme"
+                app:titleTextColor="@color/white" />
+
+        <ImageView
+                android:id="@+id/author_cover"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@id/toolbar"
+                android:scaleType="fitXY"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                />
+        <TextView
+                android:id="@+id/author_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/author_cover"
+                android:padding="10dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="16sp"
+                android:maxLines="7"
+                tools:text="Hello guys how are you nice all"
+                />
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/quotesRV"
+                android:layout_below="@id/author_desc"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        <com.appwiz.quoteshub.utils.CarouselItemIndicator
+                android:id="@+id/item_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="20dp"
+                android:layout_below="@id/quotesRV"
+                android:layout_centerHorizontal="true"
+                android:gravity="end|center_vertical"
+                android:visibility="gone" />
+        <TextView
+                android:id="@+id/see_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_indicator"
+                android:layout_centerHorizontal="true"
+                android:text="@string/see_all"
+                android:textSize="16sp"
+                android:layout_margin="20dp"
+                android:fontFamily="@font/roboto_regular"
+                android:background="@color/textColorPrimary"
+                android:textColor="@color/white"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:visibility="invisible"/>
+        <ProgressBar
+                android:id="@+id/loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"/>
 
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>
+

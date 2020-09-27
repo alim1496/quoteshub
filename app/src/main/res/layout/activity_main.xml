@@ -34,8 +34,8 @@
             android:background="@color/colorPrimary"
             android:layout_alignParentBottom="true"
             app:labelVisibilityMode="labeled"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
+            app:itemIconTint="@drawable/nav_item_color_state"
+            app:itemTextColor="@drawable/nav_item_color_state"
             app:menu="@menu/bottom_nav_menu"/>
 
 </RelativeLayout>
