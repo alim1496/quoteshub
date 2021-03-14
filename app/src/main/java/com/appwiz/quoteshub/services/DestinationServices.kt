@@ -17,10 +17,11 @@ interface DestinationServices {
     @GET("quotes/v2/categories/")
     fun getCategories(): Call<List<Category>>
 
-    @GET("quotes/v2/category/{id}/")
+    @GET("quotes/v3/category/{id}/")
     fun getCategoryQuotes(
         @Path("id") id : Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Call<List<Quote>>
 
     @GET("quotes/v2/sources/")
@@ -38,4 +39,12 @@ interface DestinationServices {
         @Path("id") id: Int,
         @Query("page") page: Int
     ): Call<List<Quote>>
+
+    @GET("quotes/v3/home/")
+    fun getFeedLatest(
+        @Query("featured") featured: Boolean,
+        @Query("with_topics") with_topics: Boolean,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ) : Call<LatestFeed>
 }

@@ -8,6 +8,7 @@
     <string name="common_zero">0</string>
     <string name="more_loading">loading...</string>
     <string name="see_all">See All</string>
+    <string name="quotation">"</string>
 
     <!-- single author xml -->
     <string name="author_fav">Favorite</string>

@@ -1,5 +1,10 @@
 package com.appwiz.quoteshub.models
 
+data class LatestFeed(
+    var quotes:List<Quote>,
+    var categories:List<Category>
+)
+
 data class Quote(
     var id : Int,
     var title : String,

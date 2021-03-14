@@ -17,7 +17,7 @@ class QuotesDataSource(val id:Int, val type:String) : PageKeyedDataSource<Int, Q
         if (type.equals("source")) {
             call = ServiceBuilder.buildService(DestinationServices::class.java).getMoreQuotes(id, 1)
         } else {
-            call = ServiceBuilder.buildService(DestinationServices::class.java).getCategoryQuotes(id, 1)
+            call = ServiceBuilder.buildService(DestinationServices::class.java).getCategoryQuotes(id, 1, 30)
         }
         state.postValue(NetworkState.LOADING)
         call.enqueue(object : retrofit2.Callback<List<Quote>> {
@@ -38,7 +38,7 @@ class QuotesDataSource(val id:Int, val type:String) : PageKeyedDataSource<Int, Q
         if (type.equals("source")) {
             call = ServiceBuilder.buildService(DestinationServices::class.java).getMoreQuotes(id, params.key)
         } else {
-            call = ServiceBuilder.buildService(DestinationServices::class.java).getCategoryQuotes(id, params.key)
+            call = ServiceBuilder.buildService(DestinationServices::class.java).getCategoryQuotes(id, params.key, 30)
         }
         call.enqueue(object : retrofit2.Callback<List<Quote>> {
             override fun onFailure(call: Call<List<Quote>>, t: Throwable) {

@@ -9,7 +9,12 @@
             app:tabTextColor="@color/white"
             android:background="@color/colorPrimary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="40dp"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabIndicatorHeight="2dp"
+            android:clipToPadding="false"
+            app:tabGravity="fill"
+            app:tabMode="scrollable"/>
 
     <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"

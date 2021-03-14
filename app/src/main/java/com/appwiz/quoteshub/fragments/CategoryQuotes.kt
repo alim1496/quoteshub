@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.QuotesAdapter
 import com.appwiz.quoteshub.models.LatestFeed
+import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
 import com.appwiz.quoteshub.viewmodels.HomeViewModel
@@ -22,21 +23,28 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+class CategoryQuotes : Fragment() {
 
-class FeaturedQuotes : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var loader: ProgressBar
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: QuotesAdapter
+    private var _id:Int = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.home_quotes_container, container, false)
         recyclerView = view.findViewById(R.id.recyclerview)
         loader = view.findViewById(R.id.loader)
         swipe = view.findViewById(R.id.swipe)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        fetchQuotes()
+        _id = arguments!!.getInt("category_id")
+
+        fetchQuotes(_id)
 
         adapter = QuotesAdapter()
         recyclerView.adapter = adapter
@@ -45,42 +53,32 @@ class FeaturedQuotes : Fragment() {
             DividerItemDecoration(
                 activity,
                 DividerItemDecoration.VERTICAL
-            ))
+            )
+        )
         swipe.setOnRefreshListener {
             swipe.isRefreshing = false
-            fetchQuotes()
+            fetchQuotes(_id)
         }
         return view
     }
 
-    private fun fetchQuotes() {
+    private fun fetchQuotes(id:Int) {
         val call = ServiceBuilder.buildService(DestinationServices::class.java)
-        call.getFeedLatest(true, false, 1, 10)
-            .enqueue(object : Callback<LatestFeed> {
-                override fun onFailure(call: Call<LatestFeed>, t: Throwable) {
-                    Log.e("home", "error " + t.message)
+        call.getCategoryQuotes(id, 1, 10)
+            .enqueue(object : Callback<List<Quote>> {
+                override fun onFailure(call: Call<List<Quote>>, t: Throwable) {
+                    Log.e("category", "error " + t.message)
                     loader.visibility = View.GONE
                 }
 
-                override fun onResponse(call: Call<LatestFeed>, response: Response<LatestFeed>) {
+                override fun onResponse(call: Call<List<Quote>>, response: Response<List<Quote>>) {
                     if (response.isSuccessful) {
-                        Log.e("home", "response " + response.body())
-                        val quotes = response.body()!!.quotes
+                        Log.e("category", "response " + response.body())
+                        val quotes = response.body()!!
                         adapter.reloadData(quotes.toMutableList())
                         loader.visibility = View.GONE
                     }
                 }
             })
     }
-
-    private fun showEmptyList(show: Boolean) {
-        if (show) {
-            loader.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
-        } else {
-            loader.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-        }
-    }
-
 }

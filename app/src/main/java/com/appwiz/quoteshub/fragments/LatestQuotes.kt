@@ -15,7 +15,7 @@ import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.HomeQuotesAdapter
 import com.appwiz.quoteshub.viewmodels.HomeViewModel
 
-class LatestQuotes(private val viewmodel:HomeViewModel) : Fragment() {
+class LatestQuotes : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var loader: ProgressBar
@@ -26,17 +26,14 @@ class LatestQuotes(private val viewmodel:HomeViewModel) : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerview)
         loader = view.findViewById(R.id.loader)
         swipe = view.findViewById(R.id.swipe)
-        viewmodel.setLatest()
+        //viewmodel.setLatest()
         val adapter = context?.let { HomeQuotesAdapter(it) }
-        viewmodel.getLatest().observe(viewLifecycleOwner, Observer {
-            showEmptyList(it.size == 0)
-            adapter?.submitList(it)
-        })
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         swipe.setOnRefreshListener {
             swipe.isRefreshing = false
-            viewmodel.setLatest()
+            //viewmodel.setLatest()
         }
         return view
     }
