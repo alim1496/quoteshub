@@ -2,14 +2,15 @@ package com.appwiz.quoteshub.room
 
 import android.content.Context
 import androidx.room.*
+import com.appwiz.quoteshub.models.Category
 import com.appwiz.quoteshub.room.dao.CatDao
 import com.appwiz.quoteshub.room.dao.HomeDao
 import com.appwiz.quoteshub.room.entity.*
 
-private const val DATABASE = "favorites"
+private const val DATABASE = "quotes_db"
 
 
-@Database(entities = [CatEntity::class, HomeQuote::class], version = 9, exportSchema = false)
+@Database(entities = [Category::class, HomeQuote::class], version = 10, exportSchema = false)
 abstract class AppDB : RoomDatabase() {
     abstract fun catDao() : CatDao
     abstract fun homeDao() : HomeDao

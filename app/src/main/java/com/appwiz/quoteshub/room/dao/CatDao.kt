@@ -5,17 +5,17 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.appwiz.quoteshub.room.entity.CatEntity
+import com.appwiz.quoteshub.models.Category
 
 @Dao
 interface CatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addCats(cats: List<CatEntity>)
+    suspend fun addCats(cats: List<Category>)
 
-    @Query("select * from CatEntity")
-    fun showCats(): LiveData<List<CatEntity>>
+    @Query("select * from Category")
+    fun showCats(): List<Category>
 
-    @Query("select count(*) from CatEntity")
+    @Query("select count(*) from Category")
     suspend fun checkEmptyCategories(): Int
 
 }

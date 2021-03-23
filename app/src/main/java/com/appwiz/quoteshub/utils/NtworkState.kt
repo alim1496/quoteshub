@@ -1,6 +1,6 @@
 package com.appwiz.quoteshub.utils
 
-class NetworkState private constructor(var status: Status, var msg: String) {
+class NetworkState constructor(var status: Status, var msg: String) {
     var code: Int = 0
 
     enum class Status {
