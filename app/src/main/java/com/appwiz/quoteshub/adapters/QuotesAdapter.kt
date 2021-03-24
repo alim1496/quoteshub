@@ -56,7 +56,7 @@ class QuotesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    private fun hasExtraRow() : Boolean = networkState != null && networkState != NetworkState.LOADED
+    private fun hasExtraRow() : Boolean = networkState != NetworkState.LOADED
 
     fun reloadData(quotes:MutableList<Quote>) {
         this.quotes = quotes

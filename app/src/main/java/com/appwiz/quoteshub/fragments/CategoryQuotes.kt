@@ -63,7 +63,9 @@ class CategoryQuotes : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        networkState.observe(viewLifecycleOwner, Observer { adapter::setNetworkState })
+        networkState.observe(viewLifecycleOwner, Observer {
+            (adapter::setNetworkState)(it)
+        })
 
         val listener = object: InfiniteScrollListener(llm) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
