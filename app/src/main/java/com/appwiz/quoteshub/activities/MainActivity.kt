@@ -7,6 +7,7 @@ import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.fragments.AuthorsFragment
 import com.appwiz.quoteshub.fragments.HomeFragment
 import com.appwiz.quoteshub.fragments.MiscFragment
+import com.appwiz.quoteshub.fragments.VideoFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -36,6 +37,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.navigation_misc -> {
                 replaceFragment(MiscFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_video -> {
+                replaceFragment(VideoFragment())
                 return@OnNavigationItemSelectedListener true
             }
         }

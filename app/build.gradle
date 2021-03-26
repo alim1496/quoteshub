@@ -86,4 +86,7 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
+
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+
 }

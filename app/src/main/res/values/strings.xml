@@ -4,6 +4,7 @@
     <string name="title_dashboard">Categories</string>
     <string name="title_notifications">Authors</string>
     <string name="title_misc">Misc</string>
+    <string name="title_video">Videos</string>
 
     <string name="common_zero">0</string>
     <string name="more_loading">loading...</string>

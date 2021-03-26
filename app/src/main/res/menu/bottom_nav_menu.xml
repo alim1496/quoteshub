@@ -12,6 +12,11 @@
             android:title="@string/title_notifications"/>
 
     <item
+            android:id="@+id/navigation_video"
+            android:icon="@drawable/ic_video"
+            android:title="@string/title_video"/>
+
+    <item
         android:id="@+id/navigation_misc"
         android:icon="@drawable/ic_settings"
         android:title="@string/title_misc"/>

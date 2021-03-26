@@ -19,3 +19,9 @@ data class Source(
     var id : Int,
     var name : String
 )
+
+data class Video(
+    var id : Int,
+    var title: String,
+    var videoID: String
+)
