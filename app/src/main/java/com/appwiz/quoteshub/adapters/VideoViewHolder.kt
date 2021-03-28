@@ -17,11 +17,11 @@ class VideoViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
     private val desc: TextView = itemView.findViewById(R.id.video_desc)
 
     fun bindView(video:Video) {
-        desc.text = video.title
+        desc.text = video.video_desc
         playerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(initializedYouTubePlayer: YouTubePlayer) {
                 youTubePlayer = initializedYouTubePlayer
-                youTubePlayer.cueVideo(video.videoID, 0f)
+                youTubePlayer.cueVideo(video.video_id, 0f)
             }
         })
     }

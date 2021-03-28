@@ -42,11 +42,6 @@ class VideoFragment : Fragment() {
 
         loader.visibility = View.GONE
         val videos:MutableList<Video> = mutableListOf()
-        videos.add(Video(1, "This is a cool video", "6JYIGclVQdw"))
-        videos.add(Video(2, "This is a hot video", "LvetJ9U_tVY"))
-        videos.add(Video(3, "This is a good video", "8T6rsI6WfGs"))
-        videos.add(Video(4, "This is a bad video", "lYhgQufAFZ4"))
-        videos.add(Video(5, "This is a fine video", "XtO_p9SrW1s"))
         adapter.setData(videos)
         return view
     }

@@ -22,6 +22,6 @@ data class Source(
 
 data class Video(
     var id : Int,
-    var title: String,
-    var videoID: String
+    var video_id: String,
+    var video_desc: String
 )

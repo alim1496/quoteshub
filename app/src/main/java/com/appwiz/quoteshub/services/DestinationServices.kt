@@ -47,4 +47,9 @@ interface DestinationServices {
         @Query("page") page: Int,
         @Query("size") size: Int
     ) : Call<LatestFeed>
+
+    @GET("quotes/v1/videos/")
+    fun getVideos(
+        @Query("page") page: Int
+    ) : Call<List<Video>>
 }
