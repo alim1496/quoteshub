@@ -14,7 +14,12 @@ import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.AuthorsAdapter
 import com.appwiz.quoteshub.adapters.VideoAdapter
 import com.appwiz.quoteshub.models.Video
+import com.appwiz.quoteshub.services.DestinationServices
+import com.appwiz.quoteshub.services.ServiceBuilder
 import com.appwiz.quoteshub.utils.NetworkState
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class VideoFragment : Fragment() {
 
@@ -40,9 +45,26 @@ class VideoFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        loader.visibility = View.GONE
-        val videos:MutableList<Video> = mutableListOf()
-        adapter.setData(videos)
+        getVideos(1)
+
         return view
+    }
+
+    private fun getVideos(page:Int) {
+        val call = ServiceBuilder.buildService(DestinationServices::class.java)
+        call.getVideos(page).enqueue(object : Callback<List<Video>> {
+            override fun onFailure(call: Call<List<Video>>, t: Throwable) {
+                loader.visibility = View.GONE
+            }
+
+            override fun onResponse(call: Call<List<Video>>, response: Response<List<Video>>) {
+                if (response.isSuccessful) {
+                    val videos = response.body()!!
+                    loader.visibility = View.GONE
+                    if (page == 1) adapter.setData(videos.toMutableList())
+                }
+            }
+
+        })
     }
 }
