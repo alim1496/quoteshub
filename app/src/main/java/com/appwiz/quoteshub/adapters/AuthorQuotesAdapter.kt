@@ -10,7 +10,6 @@ import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.models.AuthorQuote
 
 class AuthorQuotesAdapter(val quotes:List<AuthorQuote>) : RecyclerView.Adapter<AuthorQuotesAdapter.MyViewHolder>() {
-    private val COLOR = arrayOf("#F7E6C5", "#EED2EE", "#FFD492", "#F4AAAB", "#E6E4E4", "#FEF2DF", "#FCF18B", "#E6677D", "#C9FFFD", "#72E6DA", "#E6677D")
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_author_details_quote, parent, false)
@@ -20,8 +19,7 @@ class AuthorQuotesAdapter(val quotes:List<AuthorQuote>) : RecyclerView.Adapter<A
     override fun getItemCount(): Int = quotes.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val quote = quotes.get(position)
-        holder.itemView.setBackgroundColor(Color.parseColor(COLOR[position % 5]))
+        val quote = quotes[position]
         holder.setData(quote)
     }
 

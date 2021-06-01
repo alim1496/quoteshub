@@ -37,6 +37,7 @@
     <string name="add_fav">Add to favorites</string>
     <string name="copy_quote">Copy to clipboard</string>
     <string name="share_quote">Share to social media</string>
+    <string name="misc_title">Miscellaneous</string>
 
     <string name="empty_quote">No Quote Found</string>
 </resources>

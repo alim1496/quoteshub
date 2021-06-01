@@ -53,7 +53,7 @@ class CategoryQuotes : Fragment() {
 
         fetchQuotes(_id, pageCount, 10)
 
-        adapter = QuotesAdapter()
+        adapter = QuotesAdapter(true)
         recyclerView.adapter = adapter
         val llm = LinearLayoutManager(context)
         recyclerView.layoutManager = llm

@@ -29,6 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.appwiz.quoteshub.activities.SingleAuthor"/>
+        <activity android:name="com.appwiz.quoteshub.activities.MiscActivity"/>
         <activity android:name="com.appwiz.quoteshub.activities.ActivityQuotes">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>

@@ -34,7 +34,7 @@ interface DestinationServices {
         @Path("id") id: Int
     ): Call<AuthorDetails>
 
-    @GET("quotes/v2/source/{id}/quotes/")
+    @GET("quotes/v3/source/{id}/quotes/")
     fun getMoreQuotes(
         @Path("id") id: Int,
         @Query("page") page: Int

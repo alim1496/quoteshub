@@ -38,7 +38,7 @@ class FeaturedQuotes : Fragment() {
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         fetchQuotes()
 
-        adapter = QuotesAdapter()
+        adapter = QuotesAdapter(true)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.addItemDecoration(

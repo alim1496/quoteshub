@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="10dp"
+            app:titleTextColor="@color/white"
+            app:theme="@style/ToolbarTheme"
+            android:fontFamily="@font/notosans_bold"
+            app:navigationIcon="?attr/homeAsUpIndicator">
+
+        <TextView
+                android:text="@string/misc_title"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </androidx.appcompat.widget.Toolbar>
     <TextView
             android:id="@+id/fb_page"
             android:text="@string/find_fb_page"

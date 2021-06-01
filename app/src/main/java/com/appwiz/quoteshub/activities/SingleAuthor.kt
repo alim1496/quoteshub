@@ -2,6 +2,7 @@ package com.appwiz.quoteshub.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -52,13 +53,14 @@ class SingleAuthor : AppCompatActivity() {
 
         title = name
 
-        id?.let { getAuthorDetails(it) }
+        if (id != null) {
+            getAuthorDetails(id)
+        }
 
         button.setOnClickListener {
             val intent = Intent(this, ActivityQuotes::class.java)
             intent.putExtra("id", id)
             intent.putExtra("name", name)
-            intent.putExtra("type", "source")
             startActivity(intent)
         }
     }
@@ -78,21 +80,36 @@ class SingleAuthor : AppCompatActivity() {
         requestCall.enqueue(object : Callback<AuthorDetails> {
             override fun onFailure(call: Call<AuthorDetails>, t: Throwable) {
                 loader.visibility = View.GONE
+                Log.e("single-author", "error is "+t.message)
             }
 
             override fun onResponse(call: Call<AuthorDetails>, response: Response<AuthorDetails>) {
-                loader.visibility = View.GONE
-                button.visibility = View.VISIBLE
-                val res: AuthorDetails = response.body()!!
-                desc.text = res.source.shortDesc
-                Picasso.get().load(res.source.cover).placeholder(R.drawable.empty_cover).into(cover)
-                val quotes = res.quotes
-                if (quotes.isNotEmpty()) {
-                    indicator.visibility = View.VISIBLE
-                    indicator.initialize(quotes.size, 0) {pos -> recyclerView.smoothScrollToPosition(pos)}
-                    authorQuotesAdapter = AuthorQuotesAdapter(quotes)
-                    recyclerView.adapter = authorQuotesAdapter
-                    recyclerView.layoutManager = SliderLayoutManager(applicationContext) {pos:Int -> indicator.changeSelection(pos)}
+                if (response.isSuccessful) {
+                    loader.visibility = View.GONE
+                    button.visibility = View.VISIBLE
+                    Log.e("single-author", "data is " + response.body())
+                    val res: AuthorDetails = response.body()!!
+                    desc.text = res.source.shortDesc
+                    Picasso.get().load(res.source.cover).placeholder(R.drawable.empty_cover)
+                        .into(cover)
+                    Log.e("single-author", "data is " + res.source.shortDesc)
+                    val quotes = res.quotes
+                    if (quotes.isNotEmpty()) {
+                        indicator.visibility = View.VISIBLE
+                        indicator.initialize(
+                            quotes.size,
+                            0
+                        ) { pos -> recyclerView.smoothScrollToPosition(pos) }
+                        authorQuotesAdapter = AuthorQuotesAdapter(quotes)
+                        recyclerView.adapter = authorQuotesAdapter
+                        recyclerView.layoutManager =
+                            SliderLayoutManager(applicationContext) { pos: Int ->
+                                indicator.changeSelection(pos)
+                            }
+                    }
+                } else {
+                    loader.visibility = View.GONE
+                    Log.e("single-author", "response is unsuccessful " + response.message())
                 }
             }
 

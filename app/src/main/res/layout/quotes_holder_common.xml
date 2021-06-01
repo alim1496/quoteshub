@@ -13,6 +13,7 @@
                 android:elevation="10dp"
                 app:titleTextColor="@color/white"
                 app:theme="@style/ToolbarTheme"
+                android:fontFamily="@font/notosans_bold"
         />
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/quotesRV"
