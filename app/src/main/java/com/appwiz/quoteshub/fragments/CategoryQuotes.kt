@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +21,7 @@ import com.appwiz.quoteshub.adapters.QuotesAdapter
 import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
+import com.appwiz.quoteshub.utils.ClickListener
 import com.appwiz.quoteshub.utils.InfiniteScrollListener
 import com.appwiz.quoteshub.utils.NetworkState
 import com.appwiz.quoteshub.viewmodels.HomeViewModel
@@ -27,14 +29,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CategoryQuotes : Fragment() {
+class CategoryQuotes : Fragment(), ClickListener {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var errorContainer: View
     private lateinit var loader: ProgressBar
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: QuotesAdapter
     private lateinit var networkState: MutableLiveData<NetworkState>
+    private lateinit var againBtn: TextView
     private var _id:Int = 0
     private var pageCount = 1
 
@@ -45,6 +49,8 @@ class CategoryQuotes : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.home_quotes_container, container, false)
         recyclerView = view.findViewById(R.id.recyclerview)
+        errorContainer = view.findViewById(R.id.error_container)
+        againBtn = view.findViewById(R.id.try_again_btn)
         loader = view.findViewById(R.id.loader)
         swipe = view.findViewById(R.id.swipe)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -78,11 +84,7 @@ class CategoryQuotes : Fragment() {
         }
         recyclerView.addOnScrollListener(listener)
 
-        swipe.setOnRefreshListener {
-            swipe.isRefreshing = false
-            pageCount = 1
-            fetchQuotes(_id, pageCount, 10)
-        }
+        swipe.setOnRefreshListener { clickTryAgain() }
         return view
     }
 
@@ -101,11 +103,15 @@ class CategoryQuotes : Fragment() {
                     if (page > 1) {
                         networkState.postValue(NetworkState.error("something went wrong"))
                         Toast.makeText(context, "something went wrong", Toast.LENGTH_SHORT).show()
+                    } else {
+                        errorContainer.visibility = View.VISIBLE
+                        againBtn.setOnClickListener { clickTryAgain() }
                     }
                 }
 
                 override fun onResponse(call: Call<List<Quote>>, response: Response<List<Quote>>) {
                     if (response.isSuccessful) {
+                        errorContainer.visibility = View.GONE
                         val quotes = response.body()!!
                         if (page == 1) adapter.reloadData(quotes.toMutableList())
                         else {
@@ -116,5 +122,12 @@ class CategoryQuotes : Fragment() {
                     }
                 }
             })
+    }
+
+    override fun clickTryAgain() {
+        swipe.isRefreshing = false
+        errorContainer.visibility = View.GONE
+        pageCount = 1
+        fetchQuotes(_id, pageCount, 10)
     }
 }

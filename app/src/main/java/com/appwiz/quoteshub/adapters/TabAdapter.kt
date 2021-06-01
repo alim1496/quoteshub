@@ -6,9 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.appwiz.quoteshub.fragments.CategoryQuotes
 import com.appwiz.quoteshub.fragments.FeaturedQuotes
-import com.appwiz.quoteshub.fragments.LatestQuotes
 import com.appwiz.quoteshub.models.Category
-import com.appwiz.quoteshub.viewmodels.HomeViewModel
 
 class TabAdapter(fragmentActivity: FragmentActivity, private var categories: List<Category>)
     : FragmentStateAdapter(fragmentActivity) {
@@ -28,7 +26,7 @@ class TabAdapter(fragmentActivity: FragmentActivity, private var categories: Lis
     }
 
     fun getCategoryQuotes(position: Int) : Fragment {
-        val category = categories.get(position - 1)
+        val category = categories[position - 1]
         val bundle = Bundle()
         bundle.putInt("category_id", category.id)
         val fragment = CategoryQuotes()

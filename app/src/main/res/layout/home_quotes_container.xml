@@ -17,6 +17,10 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <include
+            android:id="@+id/error_container"
+            layout="@layout/common_error_container" />
+
     <ProgressBar
             android:id="@+id/loader"
             android:layout_width="wrap_content"

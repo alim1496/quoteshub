@@ -11,27 +11,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.appwiz.quoteshub.R
 import com.appwiz.quoteshub.adapters.QuotesAdapter
-import com.appwiz.quoteshub.adapters.QuotesPagedAdapter
 import com.appwiz.quoteshub.models.Quote
 import com.appwiz.quoteshub.services.DestinationServices
-import com.appwiz.quoteshub.services.NetworkState
 import com.appwiz.quoteshub.services.ServiceBuilder
 import com.appwiz.quoteshub.utils.InfiniteScrollListener
-import com.appwiz.quoteshub.viewmodels.BaseViewModelFactory
-import com.appwiz.quoteshub.viewmodels.QuotesViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ActivityQuotes : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
-    lateinit var viewModel: QuotesViewModel
     private lateinit var loader: ProgressBar
     private lateinit var recyclerView: RecyclerView
     lateinit var error: RelativeLayout

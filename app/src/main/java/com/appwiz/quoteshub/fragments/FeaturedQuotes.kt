@@ -6,7 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,70 +21,107 @@ import com.appwiz.quoteshub.adapters.QuotesAdapter
 import com.appwiz.quoteshub.models.LatestFeed
 import com.appwiz.quoteshub.services.DestinationServices
 import com.appwiz.quoteshub.services.ServiceBuilder
+import com.appwiz.quoteshub.utils.ClickListener
+import com.appwiz.quoteshub.utils.InfiniteScrollListener
+import com.appwiz.quoteshub.utils.NetworkState
 import com.appwiz.quoteshub.viewmodels.HomeViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class FeaturedQuotes : Fragment() {
+class FeaturedQuotes : Fragment(), ClickListener {
     private lateinit var recyclerView: RecyclerView
+    private lateinit var errorContainer: View
+    private lateinit var againBtn: TextView
     private lateinit var loader: ProgressBar
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: QuotesAdapter
+    private lateinit var networkState: MutableLiveData<NetworkState>
+    private var pageCount = 1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.home_quotes_container, container, false)
         recyclerView = view.findViewById(R.id.recyclerview)
+        errorContainer = view.findViewById(R.id.error_container)
+        againBtn = view.findViewById(R.id.try_again_btn)
         loader = view.findViewById(R.id.loader)
         swipe = view.findViewById(R.id.swipe)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        fetchQuotes()
+        networkState = MutableLiveData()
+        fetchQuotes(pageCount)
 
         adapter = QuotesAdapter(true)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        val llm = LinearLayoutManager(context)
+        recyclerView.layoutManager = llm
         recyclerView.addItemDecoration(
             DividerItemDecoration(
                 activity,
                 DividerItemDecoration.VERTICAL
             ))
-        swipe.setOnRefreshListener {
-            swipe.isRefreshing = false
-            fetchQuotes()
+
+        networkState.observe(viewLifecycleOwner, Observer {
+            (adapter::setNetworkState)(it)
+        })
+
+        val listener = object: InfiniteScrollListener(llm) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                pageCount += 1
+                if (networkState.value == NetworkState.LOADED) {
+                    fetchQuotes(pageCount)
+                }
+            }
+
         }
+        recyclerView.addOnScrollListener(listener)
+
+        swipe.setOnRefreshListener { clickTryAgain() }
         return view
     }
 
-    private fun fetchQuotes() {
+    private fun fetchQuotes(page:Int) {
         val call = ServiceBuilder.buildService(DestinationServices::class.java)
-        call.getFeedLatest(true, false, 1, 10)
+        if (page > 1) {
+            networkState.postValue(NetworkState.LOADING)
+        } else {
+            networkState.postValue(NetworkState.LOADED)
+        }
+        call.getFeedLatest(true, false, page, 10)
             .enqueue(object : Callback<LatestFeed> {
                 override fun onFailure(call: Call<LatestFeed>, t: Throwable) {
                     Log.e("home", "error " + t.message)
                     loader.visibility = View.GONE
+                    if (page > 1) {
+                        networkState.postValue(NetworkState.error("something went wrong"))
+                        Toast.makeText(context, "something went wrong", Toast.LENGTH_SHORT).show()
+                    } else {
+                        errorContainer.visibility = View.VISIBLE
+                        againBtn.setOnClickListener { clickTryAgain() }
+                    }
                 }
 
                 override fun onResponse(call: Call<LatestFeed>, response: Response<LatestFeed>) {
                     if (response.isSuccessful) {
-                        Log.e("home", "response " + response.body())
+                        errorContainer.visibility = View.GONE
                         val quotes = response.body()!!.quotes
-                        adapter.reloadData(quotes.toMutableList())
+                        if (page == 1) adapter.reloadData(quotes.toMutableList())
+                        else {
+                            adapter.appendData(quotes.toMutableList())
+                            networkState.postValue(NetworkState.LOADED)
+                        }
                         loader.visibility = View.GONE
                     }
                 }
             })
     }
 
-    private fun showEmptyList(show: Boolean) {
-        if (show) {
-            loader.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
-        } else {
-            loader.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-        }
+    override fun clickTryAgain() {
+        errorContainer.visibility = View.GONE
+        swipe.isRefreshing = false
+        pageCount = 1
+        fetchQuotes(pageCount)
     }
 
 }
